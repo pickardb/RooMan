@@ -28,7 +28,7 @@
  -- VCCINT        : Dedicated power pin, which MUST be connected to VCC  (1.1V).
  -- VCCIO         : Dedicated power pin, which MUST be connected to VCC
  --                 of its bank.
- --                  Bank 3A:       3.3V
+ --                  Bank 3A:       2.5V
  --                  Bank 3B:       3.3V
  --                  Bank 4A:       3.3V
  --                  Bank 5A:       3.3V
@@ -115,7 +115,7 @@ GND                          : AA6       : gnd    :                   :         
 DNU                          : AA7       :        :                   :         :           :                
 VCCA_FPLL                    : AA8       : power  :                   : 2.5V    :           :                
 GND                          : AA9       : gnd    :                   :         :           :                
-VCCPD3A                      : AA10      : power  :                   : 3.3V    : 3A        :                
+VCCPD3A                      : AA10      : power  :                   : 2.5V    : 3A        :                
 GND                          : AA11      : gnd    :                   :         :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AA12      :        :                   :         : 3A        :                
 DRAM_WE_N                    : AA13      : output : 3.3-V LVTTL       :         : 3B        : Y              
@@ -144,7 +144,7 @@ GND                          : AB5       : gnd    :                   :         
 VCCA_FPLL                    : AB6       : power  :                   : 2.5V    :           :                
 GND                          : AB7       : gnd    :                   :         :           :                
 nCSO, DATA4                  : AB8       :        :                   :         : 3A        :                
-altera_reserved_tdo          : AB9       : output : 3.3-V LVTTL       :         : 3A        : N              
+altera_reserved_tdo          : AB9       : output : 2.5 V             :         : 3A        : N              
 VCCPGM                       : AB10      : power  :                   : 1.8V/2.5V/3.0V/3.3V :           :                
 VCC_AUX                      : AB11      : power  :                   : 2.5V    :           :                
 SW[0]                        : AB12      : input  : 3.3-V LVTTL       :         : 3A        : Y              
@@ -170,13 +170,13 @@ GND                          : AC1       : gnd    :                   :         
 GND                          : AC2       : gnd    :                   :         :           :                
 GND                          : AC3       : gnd    :                   :         :           :                
 GND                          : AC4       : gnd    :                   :         :           :                
-altera_reserved_tck          : AC5       : input  : 3.3-V LVTTL       :         : 3A        : N              
+altera_reserved_tck          : AC5       : input  : 2.5 V             :         : 3A        : N              
 GND                          : AC6       : gnd    :                   :         :           :                
 AS_DATA3, DATA3              : AC7       :        :                   :         : 3A        :                
 GND                          : AC8       : gnd    :                   :         :           :                
 SW[7]                        : AC9       : input  : 3.3-V LVTTL       :         : 3A        : Y              
-VCCPD3A                      : AC10      : power  :                   : 3.3V    : 3A        :                
-VCCIO3A                      : AC11      : power  :                   : 3.3V    : 3A        :                
+VCCPD3A                      : AC10      : power  :                   : 2.5V    : 3A        :                
+VCCIO3A                      : AC11      : power  :                   : 2.5V    : 3A        :                
 SW[1]                        : AC12      : input  : 3.3-V LVTTL       :         : 3A        : Y              
 VCCPD3B4A                    : AC13      : power  :                   : 3.3V    :           :                
 DRAM_ADDR[5]                 : AC14      : output : 3.3-V LVTTL       :         : 3B        : Y              
@@ -203,7 +203,7 @@ DNU                          : AD4       :        :                   :         
 GND                          : AD5       : gnd    :                   :         :           :                
 VREFB3AN0                    : AD6       : power  :                   :         : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AD7       :        :                   :         : 3A        :                
-VCCIO3A                      : AD8       : power  :                   : 3.3V    : 3A        :                
+VCCIO3A                      : AD8       : power  :                   : 2.5V    : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AD9       :        :                   :         : 3A        :                
 SW[8]                        : AD10      : input  : 3.3-V LVTTL       :         : 3A        : Y              
 SW[4]                        : AD11      : input  : 3.3-V LVTTL       :         : 3A        : Y              
@@ -261,9 +261,9 @@ GND                          : AF2       : gnd    :                   :         
 GND                          : AF3       : gnd    :                   :         :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AF4       :        :                   :         : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AF5       :        :                   :         : 3A        :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : AF6       :        :                   :         : 3A        :                
-VCCIO3A                      : AF7       : power  :                   : 3.3V    : 3A        :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : AF8       :        :                   :         : 3A        :                
+GPIO_011                     : AF6       : input  : 2.5 V             :         : 3A        : N              
+VCCIO3A                      : AF7       : power  :                   : 2.5V    : 3A        :                
+GPIO_01                      : AF8       : output : 2.5 V             :         : 3A        : N              
 SW[2]                        : AF9       : input  : 3.3-V LVTTL       :         : 3A        : Y              
 SW[3]                        : AF10      : input  : 3.3-V LVTTL       :         : 3A        : Y              
 DRAM_CAS_N                   : AF11      : output : 3.3-V LVTTL       :         : 3B        : Y              
@@ -273,7 +273,7 @@ CLOCK_50                     : AF14      : input  : 3.3-V LVTTL       :         
 DRAM_ADDR[7]                 : AF15      : output : 3.3-V LVTTL       :         : 3B        : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : AF16      :        :                   :         : 4A        :                
 GND                          : AF17      : gnd    :                   :         :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : AF18      :        :                   :         : 4A        :                
+GPIO_132                     : AF18      : input  : 2.5 V             :         : 4A        : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : AF19      :        :                   :         : 4A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AF20      :        :                   :         : 4A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AF21      :        :                   :         : 4A        :                
@@ -286,10 +286,10 @@ GND                          : AF27      : gnd    :                   :         
 HEX0[4]                      : AF28      : output : 3.3-V LVTTL       :         : 5A        : Y              
 HEX1[4]                      : AF29      : output : 3.3-V LVTTL       :         : 5A        : Y              
 HEX1[5]                      : AF30      : output : 3.3-V LVTTL       :         : 5A        : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : AG1       :        :                   :         : 3A        :                
+GPIO_010                     : AG1       : output : 2.5 V             :         : 3A        : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : AG2       :        :                   :         : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AG3       :        :                   :         : 3A        :                
-VCCIO3A                      : AG4       : power  :                   : 3.3V    : 3A        :                
+VCCIO3A                      : AG4       : power  :                   : 2.5V    : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AG5       :        :                   :         : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AG6       :        :                   :         : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AG7       :        :                   :         : 3A        :                
@@ -301,7 +301,7 @@ DRAM_ADDR[10]                : AG12      : output : 3.3-V LVTTL       :         
 DRAM_ADDR[9]                 : AG13      : output : 3.3-V LVTTL       :         : 3B        : Y              
 GND                          : AG14      : gnd    :                   :         :           :                
 DRAM_ADDR[2]                 : AG15      : output : 3.3-V LVTTL       :         : 3B        : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : AG16      :        :                   :         : 4A        :                
+GPIO_00                      : AG16      : input  : 2.5 V             :         : 4A        : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : AG17      :        :                   :         : 4A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AG18      :        :                   :         : 4A        :                
 VCCIO4A                      : AG19      : power  :                   : 3.3V    : 4A        :                
@@ -332,7 +332,7 @@ DRAM_ADDR[11]                : AH13      : output : 3.3-V LVTTL       :         
 DRAM_ADDR[1]                 : AH14      : output : 3.3-V LVTTL       :         : 3B        : Y              
 DRAM_ADDR[8]                 : AH15      : output : 3.3-V LVTTL       :         : 3B        : Y              
 VCCIO4A                      : AH16      : power  :                   : 3.3V    : 4A        :                
-GPIO_0[11]                   : AH17      : input  : 3.3-V LVTTL       :         : 4A        : Y              
+RESERVED_INPUT_WITH_WEAK_PULLUP : AH17      :        :                   :         : 4A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AH18      :        :                   :         : 4A        :                
 GPIO_128                     : AH19      : input  : 2.5 V             :         : 4A        : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : AH20      :        :                   :         : 4A        :                
@@ -349,7 +349,7 @@ HEX1[2]                      : AH30      : output : 3.3-V LVTTL       :         
 RESERVED_INPUT_WITH_WEAK_PULLUP : AJ1       :        :                   :         : 3A        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : AJ2       :        :                   :         : 3A        :                
 GND                          : AJ3       : gnd    :                   :         :           :                
-GPIO_132                     : AJ4       : input  : 2.5 V             :         : 3B        : N              
+RESERVED_INPUT_WITH_WEAK_PULLUP : AJ4       :        :                   :         : 3B        :                
 DRAM_DQ[15]                  : AJ5       : bidir  : 3.3-V LVTTL       :         : 3B        : Y              
 DRAM_DQ[14]                  : AJ6       : bidir  : 3.3-V LVTTL       :         : 3B        : Y              
 DRAM_DQ[1]                   : AJ7       : bidir  : 3.3-V LVTTL       :         : 3B        : Y              
@@ -861,7 +861,7 @@ GND                          : U4        : gnd    :                   :         
 VCC                          : U5        : power  :                   : 1.1V    :           :                
 GND                          : U6        : gnd    :                   :         :           :                
 DCLK                         : U7        :        :                   :         : 3A        :                
-altera_reserved_tdi          : U8        : input  : 3.3-V LVTTL       :         : 3A        : N              
+altera_reserved_tdi          : U8        : input  : 2.5 V             :         : 3A        : N              
 GND                          : U9        : gnd    :                   :         :           :                
 VCC                          : U10       : power  :                   : 1.1V    :           :                
 GND                          : U11       : gnd    :                   :         :           :                
@@ -892,7 +892,7 @@ GND                          : V5        : gnd    :                   :         
 VCCA_FPLL                    : V6        : power  :                   : 2.5V    :           :                
 GND                          : V7        : gnd    :                   :         :           :                
 VCCA_FPLL                    : V8        : power  :                   : 2.5V    :           :                
-altera_reserved_tms          : V9        : input  : 3.3-V LVTTL       :         : 3A        : N              
+altera_reserved_tms          : V9        : input  : 2.5 V             :         : 3A        : N              
 GND                          : V10       : gnd    :                   :         :           :                
 VCC                          : V11       : power  :                   : 1.1V    :           :                
 GND                          : V12       : gnd    :                   :         :           :                
