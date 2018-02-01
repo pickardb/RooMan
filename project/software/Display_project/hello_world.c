@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "Colours.h"
 #include "Fonts.h"
+#include "ultrasonic_direct.h"
 
 // graphics register addresses all begin with '8' to bypass data cache on NIOS
 #define GraphicsCommandReg (*(volatile unsigned short int *)(0x84000000))
@@ -54,18 +55,18 @@ struct room {
 		short occupied;
 	};
 	struct room roomArray[10];
-void Init_RS232(void) {
+/*void Init_RS232(void) {
 	/**
 	 * Set up 6850 Control register to utilise a dive by 16 clock.
 	 * set RTS low, use 8 bits of data, no parity, 1 stop bit,
 	 * transmitter interrupt disabled
 	 * program baud rate generator to use 115k baud
-	 */
+	 *
 	printf("Initializing control register\n");
 	RS232_Control = 0b00000011;
 	RS232_Control = 0b10010101;
 	RS232_Baud 	  = 0b00000001; // program for 115k baud
-}
+}*/
 
 int putcharRS232(int c) {
 	// Poll tx bit in 6850 status register. Wait for it to become '1'
@@ -78,6 +79,17 @@ int putcharRS232(int c) {
 	return c;
 }
 
+int getbitRS232(void) {
+	// poll Rx bit in 6850 status register. Wait for it to become '1'
+	// read received characer from 6850 RxData resgister.
+	int read_status_bit = 0;
+	while(read_status_bit == 0) {
+		read_status_bit = RS232_Status & 0b01;
+	}
+	int character = RS232_RxData & 0b00000001;
+	return character;
+}
+
 int getcharRS232(void) {
 	// poll Rx bit in 6850 status register. Wait for it to become '1'
 	// read received characer from 6850 RxData resgister.
@@ -85,15 +97,20 @@ int getcharRS232(void) {
 	while(read_status_bit == 0) {
 		read_status_bit = RS232_Status & 0b01;
 	}
-	int character = RS232_RxData;
+	int character = RS232_RxData & 0b00000001;
 	return character;
+}
+
+int RS232TestForReceivedData(void) {
+	return RS232_RxData & 0b1;
 }
 
 
 int GetRangeData (void){
 	putcharRS232(0x44);
 	int c;
-	c = getcharRS232;
+	c = getbitRS232();
+	printf("RangeData: %d\n",c);
 	return c;
 }
 
@@ -102,15 +119,24 @@ int TurnServo (void){
 	return 1;
 }
 
-int TurnOnLights(void){
+void TurnOnLights(void){
 	putcharRS232(0x46);
-	return 1;
 }
 
 int GetButtonPress(void){
 	putcharRS232(0x47);
-	int c = getCharRS232();
-	return c;
+	char c = getbitRS232();
+	printf("Button State: %d\n",c);
+	if(c=='a'){
+		return 1;
+	}
+	else
+	return 0;
+
+}
+
+void ResolvedRequest(void){
+	putcharRS232(0x48);
 
 }
 /*******************************************************************************************
@@ -174,8 +200,9 @@ int ScreenTouched( void )
  *****************************************************************************/
 void WaitForTouch()
 {
-	while(!ScreenTouched())
-		;
+	while(!ScreenTouched()){
+
+	}
 }
 
 Point GetPen(void){
@@ -185,6 +212,14 @@ Point GetPen(void){
 	// calibrated correctly so that it maps to a pixel on screen
 
 	// Wait for first packet of touch
+
+	if(GetRangeData()){
+		roomArray[0].occupied=1;
+	}
+	else {
+		roomArray[0].occupied = 0;
+	}
+	wait();
 	WaitForTouch();
 
 	int i;
@@ -202,6 +237,13 @@ Point GetPen(void){
 
 	printf("x = %d ", p1.x);
 	printf("y = %d\n", p1.y);
+
+	/*if(GetButtonPress()){
+			roomArray[0].requested = 1;
+		}
+		else {
+			roomArray[0].requested = 0;
+		}*/
 
 	return p1;
 }
@@ -458,7 +500,7 @@ void BaseDisplay (void){
 }
 
 
-void InfoDisplay (int room_num, short lights, short door, short occupied){
+void InfoDisplay (int room_num, short lights, short door, short occupied, short in_use){
 	int i;
 	int j;
 
@@ -475,8 +517,14 @@ void InfoDisplay (int room_num, short lights, short door, short occupied){
 	sprintf(roomDeetsString,"Room %d Details & Options", room_num);
 	DrawRect(350,750,40,40*11,BLACK);
 	DrawString(360,40*1.25,BLACK,TEAL,roomDeetsString,2,1);
-	DrawString(400,40*2.25-14,BLACK,TEAL,"Temperature: ",2,1);
-	DrawString(530,40*2.25-14,CRIMSON,TEAL,"19.265",2,1);
+	DrawString(400,40*2.25-14,BLACK,TEAL,"In Use: ",2,1);
+	if(in_use){
+		DrawString(530,40*2.25-14,GREEN,TEAL,"YES",2,1);
+	}
+	else{
+		DrawString(530,40*2.25-14,CRIMSON,TEAL,"NO",2,1);
+
+	}
 	DrawString(400,40*3.25-14,BLACK,TEAL,"Occupied: ",2,1);
 	if(occupied){
 		DrawString(530,40*3.25-14,GREEN,TEAL,"YES",2,1);
@@ -635,6 +683,7 @@ void RunDisplay (void){
 	roomArray[4].requested = 1;
 
 	Init_Touch();
+	Init_RS232();
 	BaseDisplay();
 	last_room_num = BaseChoice();
 	while(1){
@@ -646,26 +695,40 @@ void RunDisplay (void){
 		}
 		else if (last_room_num==11){
 			roomArray[curr_room_num-1].lights = 0;
+			if(curr_room_num==1){
+				TurnOnLights();
+			}
 		}
 		else if (last_room_num==12){
 			roomArray[curr_room_num-1].lights = 1;
+			if(curr_room_num==1){
+				TurnOnLights();
+			}
 		}
 		else if (last_room_num==13){
 			roomArray[curr_room_num-1].door = 0;
+			if(curr_room_num==1){
+				TurnServo();
+			}
 			if(roomArray[curr_room_num-1].requested){
 				roomArray[curr_room_num-1].requested = 0;
+				ResolvedRequest();
 			}
 		}
 		else if (last_room_num==14){
 			roomArray[curr_room_num-1].door = 1;
+			if(curr_room_num==1){
+					TurnServo();
+				}
 			if(roomArray[curr_room_num-1].requested){
 				roomArray[curr_room_num-1].requested = 0;
 				roomArray[curr_room_num-1].in_use = 1;
+				ResolvedRequest();
 			}
 		}
 
 
-		InfoDisplay(curr_room_num,roomArray[curr_room_num-1].lights,roomArray[curr_room_num-1].door,roomArray[curr_room_num-1].occupied);
+		InfoDisplay(curr_room_num,roomArray[curr_room_num-1].lights,roomArray[curr_room_num-1].door,roomArray[curr_room_num-1].occupied, roomArray[curr_room_num-1].in_use);
 		int k;
 		for(k=0;k<10;k++){
 			if(roomArray[k].requested==1){
