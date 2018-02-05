@@ -43,6 +43,19 @@
 #define TEST_ITERATIONS 10
 #define ERROR -1
 
+void Init_RS232(void) {
+	/**
+	 * Set up 6850 Control register to utilise a dive by 16 clock.
+	 * set RTS low, use 8 bits of data, no parity, 1 stop bit,
+	 * transmitter interrupt disabled
+	 * program baud rate generator to use 115k baud
+	 */
+	printf("Initializing control register\n");
+	RS232_Control = 0b00000011;
+	RS232_Control = 0b10010101;
+	RS232_Baud 	  = 0b00000001; // program for 115k baud
+}
+
 int runUltrasonic()
 {
 	Init_RS232();
@@ -127,15 +140,3 @@ void initUltrasonic(){
 	Bluetooth_Baud = 0b00000111;
 }
 
-void Init_RS232(void) {
-	/**
-	 * Set up 6850 Control register to utilise a dive by 16 clock.
-	 * set RTS low, use 8 bits of data, no parity, 1 stop bit,
-	 * transmitter interrupt disabled
-	 * program baud rate generator to use 115k baud
-	 */
-	printf("Initializing control register\n");
-	RS232_Control = 0b00000011;
-	RS232_Control = 0b10010101;
-	RS232_Baud 	  = 0b00000111; // program for 9600 baud
-}
