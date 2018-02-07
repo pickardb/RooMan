@@ -3,7 +3,7 @@
 **/db/**
 **/output_files/
 **/output_files/**
-
+*.DS_Store
 #don't exclude git 
 !**/.git/objects/db/
 !**/.git/objects/db/**

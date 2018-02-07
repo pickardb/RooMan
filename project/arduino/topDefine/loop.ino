@@ -70,11 +70,11 @@ void executeCommand(char incomingCommand){
         }
       break;
 
-    case doorOpenComand:
+    case doorOpenCommand:
       Serial.println("Door Open");
       turnServo(openPos);
       break;
-    case doorCloseComand:
+    case doorCloseCommand:
       Serial.println("Door Closed");
       turnServo(closedPos);
       break;
@@ -83,7 +83,7 @@ void executeCommand(char incomingCommand){
       Serial.println("Lights ON");
       digitalWrite(ledPin, HIGH);
       break;
-    case lightOffComand:
+    case lightOffCommand:
       Serial.println("Lights OFF");
       digitalWrite(ledPin, LOW);
       break;

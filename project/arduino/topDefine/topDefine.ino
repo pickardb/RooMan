@@ -19,9 +19,9 @@
 #define solvedCommand 'a'
 #define updateRoomStatusCommand 'b' //free or occupied
 #define lightOnCommand 'c'
-#define lightOffComand 'd'
-#define doorOpenComand 'e'
-#define doorCloseComand 'f'
+#define lightOffCommand 'd'
+#define doorOpenCommand 'e'
+#define doorCloseCommand 'f'
 
 //output message
 #define occupiedMessage '1'
