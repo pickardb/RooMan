@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_qsys_0' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: ../../nios_system.sopcinfo
  *
- * Generated: Wed Jan 31 15:08:24 PST 2018
+ * Generated: Tue Feb 06 17:00:08 PST 2018
  */
 
 /*

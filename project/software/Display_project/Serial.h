@@ -4,6 +4,13 @@
 #define RS232_TxData 	(*(volatile unsigned char *)(0x84000202))
 #define RS232_RxData 	(*(volatile unsigned char *)(0x84000202))
 #define RS232_Baud 	 	(*(volatile unsigned char *)(0x84000204))
+#define lightOnCommand 'c'
+#define lightOffCommand 'd'
+#define doorOpenCommand 'e'
+#define doorCloseCommand 'f'
+#define occupiedMessage '1'
+#define freeMessage '2'
+#define requestRoomMessage '3'
 
 
 void Init_RS232(void) {
@@ -17,17 +24,6 @@ void Init_RS232(void) {
 	RS232_Control = 0b00000011;
 	RS232_Control = 0b10010101;
 	RS232_Baud 	  = 0b00000001; // program for 115k baud
-}
-
-/*****************************************************************************
- ** test if screen touched
- *****************************************************************************/
-int ScreenTouched( void )
-{
-	// return TRUE if any data received from 6850 connected to touchscreen
-	// or FALSE otherwise
-
-	return (Touchscreen_RxData == 0x80);
 }
 
 
@@ -67,4 +63,43 @@ int getcharRS232(void) {
 int RS232TestForReceivedData(void) {
 	return RS232_RxData & 0b1;
 }
+
+int GetRangeData(void) {
+	putcharRS232(0x44);
+	int c;
+	c = getbitRS232();
+	printf("RangeData: %d\n", c);
+	return c;
+}
+
+int OpenServo(void) {
+	putcharRS232(doorOpenCommand);
+	return 1;
+}
+
+int CloseServo(void) {
+	putcharRS232(doorCloseCommand);
+	return 1;
+}
+
+void TurnOnLights(void) {
+	putcharRS232(lightOnCommand);
+}
+
+void TurnOffLights(void) {
+	putcharRS232(lightOffCommand);
+}
+
+int GetButtonPress(void) {
+	putcharRS232(0x47);
+	char c = getbitRS232();
+	printf("Button State: %d\n", c);
+	if (c == 'a') {
+		return 1;
+	} else
+		return 0;
+
+}
+
+
 

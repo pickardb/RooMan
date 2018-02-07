@@ -53,12 +53,22 @@ void Init_Touch(void)
 }
 
 /*****************************************************************************
+ ** test if screen touched
+ *****************************************************************************/
+int ScreenTouched( void )
+{
+	// return TRUE if any data received from 6850 connected to touchscreen
+	// or FALSE otherwise
+
+	return (Touchscreen_RxData == 0x80);
+}
+
+/*****************************************************************************
  ** wait for screen to be touched
  *****************************************************************************/
 void WaitForTouch()
 {
 	while(!ScreenTouched()){
-
 	}
 }
 
@@ -73,20 +83,10 @@ void WaitForTouch()
 Point GetPen(void){
 	Point p1;
 	int packets[4];
+	char command;
 	// wait for a pen down command then return the X,Y coord of the point
 	// calibrated correctly so that it maps to a pixel on screen
-
-	// Wait for first packet of touch
-
-	/*if(GetRangeData()){
-		roomArray[0].occupied=1;
-	}
-	else {
-		roomArray[0].occupied = 0;
-	}*/
-	wait();
 	WaitForTouch();
-
 	int i;
 	for(i = 0; i < 4; i++){
 		packets[i] = getCharTouch();
@@ -116,39 +116,52 @@ Point GetPen(void){
 Point GetPress(void)
 {
 	Point p1;
-	printf("Getting Press\n");
 	// wait for a pen down command then return the X,Y coord of the point
 	// calibrated correctly so that it maps to a pixel on screen
 	p1 = GetPen();
 	return p1;
 }
 
-int GetRangeData(void) {
-	putcharRS232(0x44);
-	int c;
-	c = getbitRS232();
-	printf("RangeData: %d\n", c);
-	return c;
+Point GetBasePen(void){
+	Point p1;
+	int packets[4];
+	char command;
+	// wait for a pen down command then return the X,Y coord of the point
+	// calibrated correctly so that it maps to a pixel on screen
+	WaitForTouch();
+	int i;
+	for(i = 0; i < 4; i++){
+		packets[i] = getCharTouch();
+	}
+
+	// Get x11 : x7 from 2nd packet, and concatenate to x6 : x0 from 1st packet
+	p1.x = (packets[1] << 7) | packets[0];
+	p1.y = (packets[3] << 7) | packets[2];
+
+	// Map from controller resolution to screen pixel
+	p1.x = p1.x * 799 / 4095;
+	p1.y = p1.y  * 479 / 4095;
+
+	printf("x = %d ", p1.x);
+	printf("y = %d\n", p1.y);
+
+	/*if(GetButtonPress()){
+			roomArray[0].requested = 1;
+		}
+		else {
+			roomArray[0].requested = 0;
+		}*/
+
+	return p1;
 }
 
-int TurnServo(void) {
-	putcharRS232(0x45);
-	return 1;
-}
-
-void TurnOnLights(void) {
-	putcharRS232(0x46);
-}
-
-int GetButtonPress(void) {
-	putcharRS232(0x47);
-	char c = getbitRS232();
-	printf("Button State: %d\n", c);
-	if (c == 'a') {
-		return 1;
-	} else
-		return 0;
-
+Point GetBasePress(void)
+{
+	Point p1;
+	// wait for a pen down command then return the X,Y coord of the point
+	// calibrated correctly so that it maps to a pixel on screen
+	p1 = GetBasePen();
+	return p1;
 }
 
 
