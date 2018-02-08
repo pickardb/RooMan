@@ -24,11 +24,11 @@ void Init_RS232(void) {
 	printf("Initializing control register\n");
 	RS232_Control = 0b00000011;
 	RS232_Control = 0b10010101;
-	RS232_Baud 	  = 0b00000001; // program for 115k baud
+	RS232_Baud 	  = 0b00000111; // program for 9600 baud
 }
 
 
-int putcharRS232(int c) {
+int putcharRS232(char c) {
 	// Poll tx bit in 6850 status register. Wait for it to become '1'
 	// Write 'c' to the 6850 TxData register to output the character
 	int read_status_bit = 0;
@@ -50,19 +50,19 @@ int getbitRS232(void) {
 	return character;
 }
 
-int getcharRS232(void) {
+char getcharRS232(void) {
 	// poll Rx bit in 6850 status register. Wait for it to become '1'
 	// read received characer from 6850 RxData resgister.
 	int read_status_bit = 0;
 	while(read_status_bit == 0) {
 		read_status_bit = RS232_Status & 0b01;
 	}
-	int character = RS232_RxData & 0b00000001;
+	char character = RS232_RxData;
 	return character;
 }
 
 int RS232TestForReceivedData(void) {
-	return RS232_RxData & 0b1;
+	return RS232_Status & 0b1;
 }
 
 int GetRangeData(void) {
@@ -75,14 +75,12 @@ int GetRangeData(void) {
 	return 0;
 }
 
-int OpenServo(void) {
+void OpenServo(void) {
 	putcharRS232(doorOpenCommand);
-	return 1;
 }
 
-int CloseServo(void) {
+void CloseServo(void) {
 	putcharRS232(doorCloseCommand);
-	return 1;
 }
 
 void TurnOnLights(void) {

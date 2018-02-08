@@ -1959,6 +1959,16 @@ agreement for further details.
 	(pt 696 664)
 	(pt 696 920)
 )
+(connector
+	(text "GPIO_0[1]" (rect 810 952 861 964)(font "Arial" ))
+	(pt 984 968)
+	(pt 800 968)
+)
+(connector
+	(text "GPIO_0[0]" (rect 1298 872 1349 884)(font "Arial" ))
+	(pt 1288 888)
+	(pt 1472 888)
+)
 (junction (pt 664 296))
 (junction (pt 696 312))
 (junction (pt 208 88))

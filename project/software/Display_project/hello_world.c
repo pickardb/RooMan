@@ -11,6 +11,7 @@
 #include "Display.h"
 #include "Touch.h"
 #include "Serial.h"
+#include "Bluetooth-Configuration.h"
 
 #define LIGHTS_OFF 11
 #define LIGHTS_ON 12
@@ -124,7 +125,9 @@ char waitForInterrupt (void){
 	char received_data;
 	while(!ScreenTouched()){
 		if(RS232TestForReceivedData()){
+			delay(1);
 			received_data = getcharRS232();
+			printf("Received: %c\n", received_data);
 			return received_data;
 		}
 	}
@@ -176,7 +179,8 @@ int InfoChoice(curr_room_num) {
 			//TempReadingFunction
 		}
 		else if (command=='3'){
-			roomArray[curr_room_num].requested = 1;
+			roomArray[curr_room_num-1].requested = 1;
+			return 99;
 		}
 
 	}
@@ -214,10 +218,10 @@ void RunDisplay(void) {
 	int last_room_num;
 	int curr_room_num;
 
-
+	AttemptBluetoothConnection();
 	InitRoomArray();
 	Init_Touch();
-	Init_RS232();
+	//Init_RS232();
 	BaseDisplay();
 	last_room_num = BaseChoice();
 
@@ -266,7 +270,7 @@ void RunDisplay(void) {
 		int k;
 		for (k = 0; k < 10; k++) {
 			if (roomArray[k].requested == 1) {
-				RequestDotDisplay(k + 1);
+				RequestDotDisplay(k +1);
 			}
 		}
 		PrintNumbers(curr_room_num);
@@ -274,8 +278,19 @@ void RunDisplay(void) {
 	}
 }
 
+void TestSerial(void){
+	Init_RS232();
+	while(1){
+		TurnOnLights();
+		delay(1);
+		TurnOffLights();
+		delay(1);
+	}
+}
+
 int main(void) {
 
+	//TestSerial();
 	RunDisplay();
 
 	printf("Finished");
