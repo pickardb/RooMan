@@ -578,7 +578,7 @@ Disassembly of section .entry:
  8000014:	08406f14 	ori	at,at,444
     jmp r1
  8000018:	0800683a 	jmp	at
- 800001c:	00000000 	call	0 <__reset-0x8000000>
+ 800001c:	00000000 	call	0 <__alt_mem_sdram-0x8000000>
 
 Disassembly of section .exceptions:
 
@@ -5288,10 +5288,10 @@ int main(void) {
  8003644:	12c5883a 	add	r2,r2,r11
  8003648:	10800017 	ldw	r2,0(r2)
  800364c:	1000683a 	jmp	r2
- 8003650:	08003f80 	call	8003f8 <__reset-0x77ffc08>
+ 8003650:	08003f80 	call	8003f8 <__alt_mem_sdram-0x77ffc08>
  8003654:	080041c8 	cmpgei	zero,at,263
  8003658:	080041c8 	cmpgei	zero,at,263
- 800365c:	08004100 	call	800410 <__reset-0x77ffbf0>
+ 800365c:	08004100 	call	800410 <__alt_mem_sdram-0x77ffbf0>
  8003660:	080041c8 	cmpgei	zero,at,263
  8003664:	080041c8 	cmpgei	zero,at,263
  8003668:	080041c8 	cmpgei	zero,at,263
@@ -5356,12 +5356,12 @@ int main(void) {
  8003754:	080041c8 	cmpgei	zero,at,263
  8003758:	080041c8 	cmpgei	zero,at,263
  800375c:	08004084 	addi	zero,at,258
- 8003760:	08003ec0 	call	8003ec <__reset-0x77ffc14>
+ 8003760:	08003ec0 	call	8003ec <__alt_mem_sdram-0x77ffc14>
  8003764:	08003dc4 	addi	zero,at,247
  8003768:	08003dc4 	addi	zero,at,247
  800376c:	08003dc4 	addi	zero,at,247
  8003770:	08003f28 	cmpgeui	zero,at,252
- 8003774:	08003ec0 	call	8003ec <__reset-0x77ffc14>
+ 8003774:	08003ec0 	call	8003ec <__alt_mem_sdram-0x77ffc14>
  8003778:	080041c8 	cmpgei	zero,at,263
  800377c:	080041c8 	cmpgei	zero,at,263
  8003780:	08003f38 	rdprs	zero,at,252
@@ -7345,9 +7345,9 @@ int main(void) {
  8005658:	080061cc 	andi	zero,at,391
  800565c:	080061dc 	xori	zero,at,391
  8005660:	080058f0 	cmpltui	zero,at,355
- 8005664:	08005900 	call	800590 <__reset-0x77ffa70>
+ 8005664:	08005900 	call	800590 <__alt_mem_sdram-0x77ffa70>
  8005668:	080061dc 	xori	zero,at,391
- 800566c:	08005940 	call	800594 <__reset-0x77ffa6c>
+ 800566c:	08005940 	call	800594 <__alt_mem_sdram-0x77ffa6c>
  8005670:	08005e34 	orhi	zero,at,376
  8005674:	08005e34 	orhi	zero,at,376
  8005678:	08005e34 	orhi	zero,at,376
@@ -7384,7 +7384,7 @@ int main(void) {
  80056f4:	080061dc 	xori	zero,at,391
  80056f8:	080061dc 	xori	zero,at,391
  80056fc:	080061dc 	xori	zero,at,391
- 8005700:	08005e00 	call	8005e0 <__reset-0x77ffa20>
+ 8005700:	08005e00 	call	8005e0 <__alt_mem_sdram-0x77ffa20>
  8005704:	080061dc 	xori	zero,at,391
  8005708:	080061dc 	xori	zero,at,391
  800570c:	08005eb0 	cmpltui	zero,at,378
@@ -14879,7 +14879,7 @@ int main(void) {
  800c9e8:	0800cf10 	cmplti	zero,at,828
  800c9ec:	0800cf10 	cmplti	zero,at,828
  800c9f0:	0800cf10 	cmplti	zero,at,828
- 800c9f4:	0800cdc0 	call	800cdc <__reset-0x77ff324>
+ 800c9f4:	0800cdc0 	call	800cdc <__alt_mem_sdram-0x77ff324>
  800c9f8:	0800cc10 	cmplti	zero,at,816
  800c9fc:	0800cf10 	cmplti	zero,at,828
  800ca00:	0800cf10 	cmplti	zero,at,828
@@ -15952,21 +15952,21 @@ int main(void) {
  800da94:	10800017 	ldw	r2,0(r2)
  800da98:	1000683a 	jmp	r2
  800da9c:	0800e270 	cmpltui	zero,at,905
- 800daa0:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800daa4:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800daa0:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800daa4:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800daa8:	0800e3f4 	orhi	zero,at,911
- 800daac:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dab0:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dab4:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dab8:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dabc:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dac0:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800daac:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dab0:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dab4:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dab8:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dabc:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dac0:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dac4:	0800e3cc 	andi	zero,at,911
  800dac8:	0800e3e8 	cmpgeui	zero,at,911
- 800dacc:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800dacc:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dad0:	0800e0a0 	cmpeqi	zero,at,898
- 800dad4:	0800e200 	call	800e20 <__reset-0x77ff1e0>
- 800dad8:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800dad4:	0800e200 	call	800e20 <__alt_mem_sdram-0x77ff1e0>
+ 800dad8:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dadc:	0800e184 	addi	zero,at,902
  800dae0:	0800e190 	cmplti	zero,at,902
  800dae4:	0800e190 	cmplti	zero,at,902
@@ -15977,68 +15977,68 @@ int main(void) {
  800daf8:	0800e190 	cmplti	zero,at,902
  800dafc:	0800e190 	cmplti	zero,at,902
  800db00:	0800e190 	cmplti	zero,at,902
- 800db04:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db08:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db0c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db10:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db14:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db18:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db1c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db20:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db24:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db28:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800db04:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db08:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db0c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db10:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db14:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db18:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db1c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db20:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db24:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db28:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800db2c:	0800e1bc 	xorhi	zero,at,902
- 800db30:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db34:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db38:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db3c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db40:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db44:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db48:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db4c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db50:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db54:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800db30:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db34:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db38:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db3c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db40:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db44:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db48:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db4c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db50:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db54:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800db58:	0800dc50 	cmplti	zero,at,881
- 800db5c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db60:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db64:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db68:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db6c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800db5c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db60:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db64:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db68:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db6c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800db70:	0800dc14 	ori	zero,at,880
- 800db74:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db78:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800db74:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db78:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800db7c:	0800e0fc 	xorhi	zero,at,899
- 800db80:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db84:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db88:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db8c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db90:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db94:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db98:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800db9c:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dba0:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dba4:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800db80:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db84:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db88:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db8c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db90:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db94:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db98:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800db9c:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dba0:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dba4:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dba8:	0800e154 	ori	zero,at,901
  800dbac:	0800e2ec 	andhi	zero,at,907
- 800dbb0:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dbb4:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dbb8:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800dbb0:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dbb4:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dbb8:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dbbc:	0800e374 	orhi	zero,at,909
  800dbc0:	0800e2ec 	andhi	zero,at,907
- 800dbc4:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dbc8:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dbcc:	0800e380 	call	800e38 <__reset-0x77ff1c8>
- 800dbd0:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dbd4:	0800e240 	call	800e24 <__reset-0x77ff1dc>
+ 800dbc4:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dbc8:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dbcc:	0800e380 	call	800e38 <__alt_mem_sdram-0x77ff1c8>
+ 800dbd0:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dbd4:	0800e240 	call	800e24 <__alt_mem_sdram-0x77ff1dc>
  800dbd8:	0800dc54 	ori	zero,at,881
  800dbdc:	0800e328 	cmpgeui	zero,at,908
  800dbe0:	0800e368 	cmpgeui	zero,at,909
- 800dbe4:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800dbe4:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dbe8:	0800e28c 	andi	zero,at,906
- 800dbec:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800dbec:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dbf0:	0800dc18 	cmpnei	zero,at,880
- 800dbf4:	0800e400 	call	800e40 <__reset-0x77ff1c0>
- 800dbf8:	0800e400 	call	800e40 <__reset-0x77ff1c0>
+ 800dbf4:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
+ 800dbf8:	0800e400 	call	800e40 <__alt_mem_sdram-0x77ff1c0>
  800dbfc:	0800e390 	cmplti	zero,at,910
  800dc00:	42000204 	addi	r8,r8,8
  800dc04:	dac12217 	ldw	r11,1160(sp)
@@ -18601,12 +18601,12 @@ int main(void) {
  8010328:	0801052c 	andhi	zero,at,1044
  801032c:	0801037c 	xorhi	zero,at,1037
  8010330:	0801052c 	andhi	zero,at,1044
- 8010334:	08010500 	call	801050 <__reset-0x77fefb0>
+ 8010334:	08010500 	call	801050 <__alt_mem_sdram-0x77fefb0>
  8010338:	0801052c 	andhi	zero,at,1044
  801033c:	0801037c 	xorhi	zero,at,1037
  8010340:	08010398 	cmpnei	zero,at,1038
  8010344:	08010398 	cmpnei	zero,at,1038
- 8010348:	08010500 	call	801050 <__reset-0x77fefb0>
+ 8010348:	08010500 	call	801050 <__alt_mem_sdram-0x77fefb0>
  801034c:	0801037c 	xorhi	zero,at,1037
  8010350:	0801038c 	andi	zero,at,1038
  8010354:	0801038c 	andi	zero,at,1038
@@ -25359,7 +25359,7 @@ void alt_icache_flush (void* start, alt_u32 len)
  8014880:	d9400015 	stw	r5,0(sp)
  8014884:	d9800115 	stw	r6,4(sp)
  8014888:	d9c00215 	stw	r7,8(sp)
- 801488c:	00000000 	call	0 <__reset-0x8000000>
+ 801488c:	00000000 	call	0 <__alt_mem_sdram-0x8000000>
  8014890:	d9400017 	ldw	r5,0(sp)
  8014894:	d9800117 	ldw	r6,4(sp)
  8014898:	d9c00217 	ldw	r7,8(sp)
@@ -25445,7 +25445,7 @@ void alt_icache_flush (void* start, alt_u32 len)
  80149d0:	10003426 	beq	r2,zero,8014aa4 <__call_exitprocs+0x18c>
  80149d4:	9809883a 	mov	r4,r19
  80149d8:	a8800015 	stw	r2,0(r21)
- 80149dc:	00000000 	call	0 <__reset-0x8000000>
+ 80149dc:	00000000 	call	0 <__alt_mem_sdram-0x8000000>
  80149e0:	acc00017 	ldw	r19,0(r21)
  80149e4:	983fe41e 	bne	r19,zero,8014978 <__alt_data_end+0xfc014978>
  80149e8:	dfc00b17 	ldw	ra,44(sp)
