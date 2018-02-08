@@ -1,9 +1,10 @@
-
 #define RS232_Control 	(*(volatile unsigned char *)(0x84000200))
 #define RS232_Status 	(*(volatile unsigned char *)(0x84000200))
 #define RS232_TxData 	(*(volatile unsigned char *)(0x84000202))
 #define RS232_RxData 	(*(volatile unsigned char *)(0x84000202))
 #define RS232_Baud 	 	(*(volatile unsigned char *)(0x84000204))
+#define solvedCommand 'a'
+#define updateRoomStatusCommand 'b'
 #define lightOnCommand 'c'
 #define lightOffCommand 'd'
 #define doorOpenCommand 'e'
@@ -65,11 +66,13 @@ int RS232TestForReceivedData(void) {
 }
 
 int GetRangeData(void) {
-	putcharRS232(0x44);
-	int c;
-	c = getbitRS232();
-	printf("RangeData: %d\n", c);
-	return c;
+	char received_data;
+	putcharRS232(updateRoomStatusCommand);
+	received_data = getcharRS232();
+	if(received_data==1){
+		return 1;
+	}
+	return 0;
 }
 
 int OpenServo(void) {
@@ -90,16 +93,12 @@ void TurnOffLights(void) {
 	putcharRS232(lightOffCommand);
 }
 
-int GetButtonPress(void) {
-	putcharRS232(0x47);
-	char c = getbitRS232();
-	printf("Button State: %d\n", c);
-	if (c == 'a') {
-		return 1;
-	} else
-		return 0;
-
+short GetTemp(void){
+	short tens = (short)getcharRS232();
+	short ones = (short)getcharRS232();
+	return 10*tens+ones;
 }
 
-
-
+void SendSolved (void){
+	putcharRS232(solvedCommand);
+}

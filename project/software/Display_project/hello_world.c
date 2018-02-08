@@ -8,7 +8,6 @@
 //Custom inlcude Files
 #include "Colours.h"
 #include "Fonts.h"
-#include <altera_up_avalon_character_lcd.h>
 #include "Display.h"
 #include "Touch.h"
 #include "Serial.h"

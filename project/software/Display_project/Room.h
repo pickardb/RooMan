@@ -7,3 +7,5 @@ struct room {
 };
 
 struct room roomArray[10];
+
+
