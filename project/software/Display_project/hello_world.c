@@ -41,7 +41,7 @@ void BaseDisplay(void) {
 	printf("Base Displayed \n");
 }
 
-void InfoDisplay(int room_num, short lights, short door, short occupied, short in_use) {
+void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use) {
 	int i;
 
 	//Cover Last Data
@@ -248,6 +248,7 @@ void RunDisplay(void) {
 			}
 			if (roomArray[curr_room_num - 1].requested) {
 				roomArray[curr_room_num - 1].requested = 0;
+				//SendSolved();
 			}
 		} else if (last_room_num == UNLOCK_DOOR) {
 			roomArray[curr_room_num - 1].door = 1;
@@ -257,6 +258,7 @@ void RunDisplay(void) {
 			if (roomArray[curr_room_num - 1].requested) {
 				roomArray[curr_room_num - 1].requested = 0;
 				roomArray[curr_room_num - 1].in_use = 1;
+				//SendSolved();
 			}
 		}
 

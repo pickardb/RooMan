@@ -1,9 +1,9 @@
 struct room {
-	short lights;
-	short door;
-	short requested;
-	short in_use;
-	short occupied;
+	int lights;
+	int door;
+	int requested;
+	int in_use;
+	int occupied;
 };
 
 struct room roomArray[10];

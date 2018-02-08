@@ -93,9 +93,9 @@ void TurnOffLights(void) {
 	putcharRS232(lightOffCommand);
 }
 
-short GetTemp(void){
-	short tens = (short)getcharRS232();
-	short ones = (short)getcharRS232();
+int GetTemp(void){
+	int tens = (int)getcharRS232();
+	int ones = (int)getcharRS232();
 	return 10*tens+ones;
 }
 
