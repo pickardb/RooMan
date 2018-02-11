@@ -4,7 +4,8 @@ char incomingCommand;
 int request = 0;  
 int sent = 0;
 int buttonState = 0;         // current state of the button
-int lastButtonState = 0;     // previous state of the button
+int lastButtonState = 0;  // previous state of the button
+int requestCounter = 0;
 
 SoftwareSerial mySerial(RxPin, TxPin); // RX, TX
 
@@ -32,6 +33,14 @@ void loop() {
 
 void checkRequest(void){
   buttonState = digitalRead(buttonPin);
+  if(requestCounter>=5000){
+    buttonState=1;
+    requestCounter=0;
+  }
+  else{
+    requestCounter++;
+    buttonState=0;
+  }
   if (buttonState != lastButtonState) {
     // if the state has changed, increment the counter
     if (buttonState == HIGH) {

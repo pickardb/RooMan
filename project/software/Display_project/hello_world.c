@@ -17,7 +17,10 @@
 #define LIGHTS_ON 12
 #define LOCK_DOOR 13
 #define UNLOCK_DOOR 14
+#define AUTO_APPROVE 15
 #define ERROR -1
+
+int auto_approve = 0;
 
 
 
@@ -99,6 +102,15 @@ void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use) {
 	DrawFillRect(570, 650, 40 * 7.75 - 34, 40 * 8.75 - 24, GREEN);
 	DrawString(580, 40 * 7.75 - 14, BLACK, GREEN, "UNLOCK", 2, 1);
 
+	if(auto_approve){
+		DrawFillRect(480,650,40*9,40*10,GREEN);
+		DrawString(505,40*9+12,BLACK,GREEN,"Auto-Approve",2,1);
+	}
+	else{
+		DrawFillRect(480,650,40*9,40*10,CRIMSON);
+		DrawString(505,40*9+12,BLACK,CRIMSON,"Auto-Approve",2,1);
+	}
+
 }
 
 void RequestDotDisplay(int room_num) {
@@ -159,10 +171,14 @@ int InfoSelect (Point p1){
 		printf("Unlocking door\n");
 		return UNLOCK_DOOR;
 	}
+	else if (p1.x>=480 && p1.x<=650 && p1.y >= 40*9 && p1.y <= 40*10){
+		printf("Toggle Auto Approve\n");
+		return AUTO_APPROVE;
+	}
 	return 0;
 }
 
-int InfoChoice(curr_room_num) {
+int InfoChoice( int curr_room_num/*, int auto_approve*/) {
 	Point p1;
 	char command;
 	int ret;
@@ -180,6 +196,9 @@ int InfoChoice(curr_room_num) {
 		}
 		else if (command=='3'){
 			roomArray[curr_room_num-1].requested = 1;
+			if(auto_approve){
+				return UNLOCK_DOOR;
+			}
 			return 99;
 		}
 
@@ -217,6 +236,7 @@ void InitRoomArray(void){
 void RunDisplay(void) {
 	int last_room_num;
 	int curr_room_num;
+	int k;
 
 	AttemptBluetoothConnection();
 	InitRoomArray();
@@ -265,9 +285,23 @@ void RunDisplay(void) {
 				//SendSolved();
 			}
 		}
+		else if (last_room_num == AUTO_APPROVE){
+			if(auto_approve){
+				auto_approve=0;
+			}
+			else{
+				auto_approve = 1;
+				for (k = 0; k < 10; k++) {
+					if(roomArray[k].requested){
+						roomArray[k].requested=0;
+						roomArray[k].in_use = 1;
+						roomArray[k].door = 1;
+					}
+				}
+			}
+		}
 
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use);
-		int k;
 		for (k = 0; k < 10; k++) {
 			if (roomArray[k].requested == 1) {
 				RequestDotDisplay(k +1);
