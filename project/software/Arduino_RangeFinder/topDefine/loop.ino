@@ -13,7 +13,7 @@ SoftwareSerial mySerial(RxPin, TxPin); // RX, TX
 
 void loop() {
   // check the button
-  if(tempCounter<500){
+  if(tempCounter<1000){
     tempCounter++;
     delay(10);
   }

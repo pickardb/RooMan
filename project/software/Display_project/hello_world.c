@@ -126,9 +126,16 @@ void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use, i
 
 }
 
-void RequestDotDisplay(int room_num) {
+void RequestCloseDisplay(int room_num) {
 
 	DrawFillRect(315, 335, 40 * room_num + 10, 40 * (room_num + 1) - 10, RED);
+	return;
+
+}
+
+void RequestOpenDisplay(int room_num) {
+
+	DrawFillRect(315, 335, 40 * room_num + 10, 40 * (room_num + 1) - 10, GREEN);
 	return;
 
 }
@@ -291,11 +298,15 @@ void RunDisplay(void) {
 			}
 			if (roomArray[curr_room_num - 1].in_use==0 && roomArray[curr_room_num - 1].requested ) {
 				roomArray[curr_room_num - 1].requested = 0;
-				//SendSolved();
 			}
 			else if (roomArray[curr_room_num - 1].in_use==1 && roomArray[curr_room_num - 1].requested ) {
 				roomArray[curr_room_num - 1].requested = 0;
 				roomArray[curr_room_num-1].in_use = 0;
+				roomArray[curr_room_num-1].lights = 0;
+				if (curr_room_num == 1) {
+					CloseServo();
+					TurnOffLights();
+				}
 			}
 		} else if (last_room_num == UNLOCK_DOOR) {
 			roomArray[curr_room_num - 1].door = 1;
@@ -305,7 +316,12 @@ void RunDisplay(void) {
 			if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
 				roomArray[curr_room_num - 1].requested = 0;
 				roomArray[curr_room_num - 1].in_use = 1;
-				//SendSolved();
+				roomArray[curr_room_num - 1].lights = 1;
+				if (curr_room_num == 1) {
+					OpenServo();
+					TurnOnLights();
+
+				}
 			}
 		}
 		else if (last_room_num == AUTO_APPROVE){
@@ -319,6 +335,9 @@ void RunDisplay(void) {
 						roomArray[k].requested=0;
 						roomArray[k].in_use = 1;
 						roomArray[k].door = 1;
+						if (k == 0) {
+							OpenServo();
+						}
 					}
 				}
 			}
@@ -328,8 +347,11 @@ void RunDisplay(void) {
 		printf("Starting Info Display\n");
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		for (k = 0; k < 10; k++) {
-			if (roomArray[k].requested == 1) {
-				RequestDotDisplay(k +1);
+			if (roomArray[k].requested == 1 && roomArray[k].in_use==1) {
+				RequestCloseDisplay(k +1);
+			}
+			else if (roomArray[k].requested == 1 && roomArray[k].in_use==0) {
+				RequestOpenDisplay(k +1);
 			}
 		}
 		//delay(2);
