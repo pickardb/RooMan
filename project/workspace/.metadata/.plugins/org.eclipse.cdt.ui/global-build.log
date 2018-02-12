@@ -1,0 +1,77 @@
+18:08:55 **** Build of configuration Nios II for project Project_Sprint_2 ****
+make all 
+Info: Building ../Display_project_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../Display_project_bsp/
+[BSP build complete]
+Info: Compiling hello_world.c to obj/default/hello_world.o
+nios2-elf-gcc -xc -MP -MMD -c -I../Display_project_bsp//HAL/inc -I../Display_project_bsp/ -I../Display_project_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx  -o obj/default/hello_world.o hello_world.c
+In file included from hello_world.c:14:0:
+Touch.h: In function 'WaitForTouch':
+Touch.h:60:2: warning: implicit declaration of function 'ScreenTouched' [-Wimplicit-function-declaration]
+  while(!ScreenTouched()){
+  ^
+Touch.h: In function 'GetPen':
+Touch.h:87:2: warning: implicit declaration of function 'wait' [-Wimplicit-function-declaration]
+  wait();
+  ^
+Touch.h: In function 'GetRangeData':
+Touch.h:127:2: warning: implicit declaration of function 'putcharRS232' [-Wimplicit-function-declaration]
+  putcharRS232(0x44);
+  ^
+Touch.h:129:2: warning: implicit declaration of function 'getbitRS232' [-Wimplicit-function-declaration]
+  c = getbitRS232();
+  ^
+hello_world.c: In function 'main':
+hello_world.c:250:2: warning: implicit declaration of function 'alt_printf' [-Wimplicit-function-declaration]
+  alt_printf("Test");
+  ^
+hello_world.c: In function 'BaseDisplay':
+hello_world.c:41:3: warning: 'roomString' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   sprintf(roomString, "Room %d", j);
+   ^
+hello_world.c: In function 'InfoDisplay':
+hello_world.c:63:2: warning: 'roomDeetsString' is used uninitialized in this function [-Wuninitialized]
+  sprintf(roomDeetsString, "Room %d Details & Options", room_num);
+  ^
+hello_world.c: In function 'PrintNumbers':
+hello_world.c:165:3: warning: 'roomString' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   sprintf(roomString, "Room %d", j);
+   ^
+Info: Linking Display_project.elf
+nios2-elf-g++  -T'../Display_project_bsp//linker.x' -msys-crt0='../Display_project_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../Display_project_bsp/   -Wl,-Map=Display_project.map   -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx  -o Display_project.elf obj/default/hello_world.o -lm -msys-lib=m
+nios2-elf-insert Display_project.elf --thread_model hal --cpu_name nios2_qsys_0 --qsys true --simulation_enabled false --stderr_dev jtag_uart_0 --stdin_dev jtag_uart_0 --stdout_dev jtag_uart_0 --sopc_system_name nios_system --quartus_project_dir "C:/CPEN391/git/CPEN391-Group14/project" --jdi C:/CPEN391/git/CPEN391-Group14/project/software/Display_project_bsp/../../DE1_SOC_NIOS.jdi --sopcinfo C:/CPEN391/git/CPEN391-Group14/project/software/Display_project_bsp/../../nios_system.sopcinfo
+Info: (Display_project.elf) 133 KBytes program size (code + initialized data).
+Info:                       65395 KBytes free for stack + heap.
+Info: Creating Display_project.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source Display_project.elf >Display_project.objdump
+[Display_project build complete]
+18:09:04 **** Build of configuration Nios II for project Project_Sprint_2 ****
+make all 
+Info: Building ../Display_project_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../Display_project_bsp/
+[BSP build complete]
+[Display_project build complete]
+18:09:16 **** Incremental Build of configuration Nios II for project Project_Sprint_2 ****
+make all 
+Info: Building ../Display_project_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../Display_project_bsp/
+[BSP build complete]
+[Display_project build complete]
+18:09:55 **** Build of configuration Nios II for project Project_Sprint_2 ****
+make all 
+Info: Building ../Display_project_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../Display_project_bsp/
+[BSP build complete]
+[Display_project build complete]
+18:10:14 **** Incremental Build of configuration Nios II for project Project_Sprint_2 ****
+make all 
+Info: Building ../Display_project_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../Display_project_bsp/
+[BSP build complete]
+[Display_project build complete]
+18:11:26 **** Incremental Build of configuration Nios II for project Project_Sprint_2 ****
+make all 
+Info: Building ../Display_project_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../Display_project_bsp/
+[BSP build complete]
+[Display_project build complete]
