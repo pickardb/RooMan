@@ -42,8 +42,8 @@ unsigned int RunRange() {
   //send a trigger pulse for ultrasonic range finder to send
   //an ultrasonic pulse
   digitalWrite(uSonicTrig, HIGH);
-  delayMicroseconds(20);
-  digitalWrite(uSonicEcho, LOW);
+  delayMicroseconds(10);
+  digitalWrite(uSonicTrig, LOW);
 
   //calculate the duration of the echo pulse
   echoPulseWidth = pulseIn(uSonicEcho, HIGH, 38500);

@@ -178,7 +178,7 @@ int InfoSelect (Point p1){
 	return 0;
 }
 
-int InfoChoice( int curr_room_num/*, int auto_approve*/) {
+int InfoChoice( int curr_room_num) {
 	Point p1;
 	char command;
 	int ret;
@@ -196,8 +196,11 @@ int InfoChoice( int curr_room_num/*, int auto_approve*/) {
 		}
 		else if (command=='3'){
 			roomArray[curr_room_num-1].requested = 1;
-			if(auto_approve){
+			if(auto_approve && roomArray[curr_room_num-1].in_use == 0){
 				return UNLOCK_DOOR;
+			}
+			else if(auto_approve && roomArray[curr_room_num-1].in_use == 1){
+				return LOCK_DOOR;
 			}
 			return 99;
 		}
@@ -270,16 +273,20 @@ void RunDisplay(void) {
 			if (curr_room_num == 1) {
 				CloseServo();
 			}
-			if (roomArray[curr_room_num - 1].requested) {
+			if (roomArray[curr_room_num - 1].in_use==0 && roomArray[curr_room_num - 1].requested ) {
 				roomArray[curr_room_num - 1].requested = 0;
 				//SendSolved();
+			}
+			else if (roomArray[curr_room_num - 1].in_use==1 && roomArray[curr_room_num - 1].requested ) {
+				roomArray[curr_room_num - 1].requested = 0;
+				roomArray[curr_room_num-1].in_use = 0;
 			}
 		} else if (last_room_num == UNLOCK_DOOR) {
 			roomArray[curr_room_num - 1].door = 1;
 			if (curr_room_num == 1) {
 				OpenServo();
 			}
-			if (roomArray[curr_room_num - 1].requested) {
+			if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
 				roomArray[curr_room_num - 1].requested = 0;
 				roomArray[curr_room_num - 1].in_use = 1;
 				//SendSolved();
@@ -300,13 +307,16 @@ void RunDisplay(void) {
 				}
 			}
 		}
-
+		//delay(1);
+		roomArray[curr_room_num-1].occupied = GetRangeData();
+		printf("Starting Info Display\n");
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use);
 		for (k = 0; k < 10; k++) {
 			if (roomArray[k].requested == 1) {
 				RequestDotDisplay(k +1);
 			}
 		}
+		//delay(2);
 		PrintNumbers(curr_room_num);
 		last_room_num = InfoChoice(curr_room_num);
 	}

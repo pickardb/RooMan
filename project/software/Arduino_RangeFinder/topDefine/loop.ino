@@ -1,46 +1,50 @@
 //global value
 unsigned int dist;
 char incomingCommand;
-int request = 0;  
+int request = 0;
 int sent = 0;
 int buttonState = 0;         // current state of the button
 int lastButtonState = 0;  // previous state of the button
 int requestCounter = 0;
+int tempCounter = 0;
 
 SoftwareSerial mySerial(RxPin, TxPin); // RX, TX
 
 
 void loop() {
+  if(tempCounter<250000){
+    tempCounter++;
+    //Serial.print("TempCounter: ");
+   // Serial.println(tempCounter);
+  }
+  else{
+    tempCounter=0;
+    Temp();
+  }
+
+
   // check the button
 
   //Serial.println("Start of loop");
   checkRequest();
- 
-  if(mySerial.available()) {
-    
+
+  if (mySerial.available()) {
+
     Serial.println("trying to read command");
     //incomingCommand = Serial.read();
     incomingCommand = mySerial.read();
-    
+
     Serial.print("Received command:");
     Serial.print(incomingCommand);
     Serial.print("\n");
     executeCommand(incomingCommand);
-    
-   }
+
+  }
 }
 
 
-void checkRequest(void){
+void checkRequest(void) {
   buttonState = digitalRead(buttonPin);
-  if(requestCounter>=5000){
-    buttonState=1;
-    requestCounter=0;
-  }
-  else{
-    requestCounter++;
-    buttonState=0;
-  }
   if (buttonState != lastButtonState) {
     // if the state has changed, increment the counter
     if (buttonState == HIGH) {
@@ -60,18 +64,18 @@ void checkRequest(void){
   }
   // save the current state as the last state, for next time through the loop
   lastButtonState = buttonState;
-  
+
 }
 
-  
-void executeCommand(char incomingCommand){
-  switch(incomingCommand){
+
+void executeCommand(char incomingCommand) {
+  switch (incomingCommand) {
     case solvedCommand:
       Serial.println("received solved command \n");
-      if(!request){
+      if (!request) {
         Serial.println("No Room Request\n");
       }
-      else{
+      else {
         request = 0;
         Serial.println("Room request solved\n");
       }
@@ -79,14 +83,16 @@ void executeCommand(char incomingCommand){
     case updateRoomStatusCommand:
       Serial.println("Update Room Status");
       dist = RunRange();
-      if(dist < rangerFinderThreshold){
-          Serial.println("Room Occupied");
-          sendSingleSerialCommand(occupiedMessage);
-        }
-      else{
-          Serial.println("Room free");
-          sendSingleSerialCommand(freeMessage);
-        }
+      Serial.print("Range is: ");
+      Serial.println(dist);
+      if (dist < rangerFinderThreshold) {
+        Serial.println("Room Occupied");
+        sendSingleSerialCommand(occupiedMessage);
+      }
+      else {
+        Serial.println("Room free");
+        sendSingleSerialCommand(freeMessage);
+      }
       break;
 
     case doorOpenCommand:
@@ -110,7 +116,7 @@ void executeCommand(char incomingCommand){
     default:
       Serial.print("Unknow command: ");
       Serial.println(incomingCommand);
-    }  
+  }
 }
 
 void sendSingleSerialCommand(char command) {
@@ -118,8 +124,30 @@ void sendSingleSerialCommand(char command) {
   Serial.println(command);
   mySerial.print(command);
   //mySerial.print('\0');
-  }
+}
 
-void sendStringSerialCommand(char* command){
-  
+void sendStringSerialCommand(char* command) {
+
+}
+
+void Temp (void) {
+  int chk = DHT.read11(DHTpin);
+  int temp;
+  int tens;
+  int ones;
+  switch (chk)
+  {
+    case DHTLIB_OK:
+      temp = DHT.temperature;
+      tens = temp/10;
+      ones = temp%10;
+      Serial.print("temp: ");
+      Serial.println(temp);
+      Serial.print("tens: ");
+      Serial.println(tens);
+      Serial.print("ones: ");
+      Serial.println(ones);
+      break;
   }
+}
+

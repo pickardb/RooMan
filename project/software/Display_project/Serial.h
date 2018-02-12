@@ -69,7 +69,7 @@ int GetRangeData(void) {
 	char received_data;
 	putcharRS232(updateRoomStatusCommand);
 	received_data = getcharRS232();
-	if(received_data==1){
+	if(received_data=='1'){
 		return 1;
 	}
 	return 0;
@@ -92,8 +92,8 @@ void TurnOffLights(void) {
 }
 
 int GetTemp(void){
-	int tens = (int)getcharRS232();
-	int ones = (int)getcharRS232();
+	int tens = (int)getcharRS232()-48;
+	int ones = (int)getcharRS232()-48;
 	return 10*tens+ones;
 }
 

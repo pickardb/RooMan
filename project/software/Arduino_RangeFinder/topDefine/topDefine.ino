@@ -1,3 +1,8 @@
+
+#include <Servo.h>
+#include <SoftwareSerial.h>
+#include <dht.h>
+
 //all the pin
 
 #define buttonPin 3
@@ -8,6 +13,9 @@
 
 #define uSonicTrig 8
 #define uSonicEcho 9
+
+#define DHTpin 4
+dht DHT;
 
 // serial pin
 #define RxPin 10
@@ -38,8 +46,6 @@
 
 
 
-#include <Servo.h>
-#include <SoftwareSerial.h>
 
 
 
