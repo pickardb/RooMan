@@ -12,18 +12,16 @@ SoftwareSerial mySerial(RxPin, TxPin); // RX, TX
 
 
 void loop() {
-  if(tempCounter<250000){
+  // check the button
+  if(tempCounter<500){
     tempCounter++;
-    //Serial.print("TempCounter: ");
-   // Serial.println(tempCounter);
+    delay(10);
   }
   else{
+    Serial.println(" ");
     tempCounter=0;
     Temp();
   }
-
-
-  // check the button
 
   //Serial.println("Start of loop");
   checkRequest();
@@ -98,6 +96,7 @@ void executeCommand(char incomingCommand) {
     case doorOpenCommand:
       Serial.println("Door Open");
       turnServo(openPos);
+      doorUnlockTone();
       break;
     case doorCloseCommand:
       Serial.println("Door Closed");
@@ -111,6 +110,10 @@ void executeCommand(char incomingCommand) {
     case lightOffCommand:
       Serial.println("Lights OFF");
       digitalWrite(ledPin, LOW);
+      break;
+    case tempRequestCommand:
+      Serial.println("Update Temperature");
+      Temp();
       break;
 
     default:
@@ -142,12 +145,21 @@ void Temp (void) {
       tens = temp/10;
       ones = temp%10;
       Serial.print("temp: ");
-      Serial.println(temp);
-      Serial.print("tens: ");
-      Serial.println(tens);
-      Serial.print("ones: ");
+      Serial.print(temp);
+      Serial.print(", tens: ");
+      Serial.print(tens);
+      Serial.print(", ones: ");
       Serial.println(ones);
+     sendSingleSerialCommand(tempMessage);
+     delay(100);
+     sendSingleSerialCommand(tens+48);
+     delay(100);
+     sendSingleSerialCommand(ones+48);
       break;
   }
+}
+
+void doorUnlockTone(void){
+  tone(buzzerPin,1000,1500);
 }
 

@@ -30,6 +30,12 @@ void delay(int number_of_seconds) {
 	while (clock() < start_time + milli_seconds){}
 }
 
+void delay_double(double number_of_seconds) {
+	int milli_seconds = 1000 * number_of_seconds;
+	clock_t start_time = clock();
+	while (clock() < start_time + milli_seconds){}
+}
+
 
 void BaseDisplay(void) {
 	int i;
@@ -45,7 +51,7 @@ void BaseDisplay(void) {
 	printf("Base Displayed \n");
 }
 
-void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use) {
+void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use, int temp) {
 	int i;
 
 	//Cover Last Data
@@ -102,13 +108,20 @@ void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use) {
 	DrawFillRect(570, 650, 40 * 7.75 - 34, 40 * 8.75 - 24, GREEN);
 	DrawString(580, 40 * 7.75 - 14, BLACK, GREEN, "UNLOCK", 2, 1);
 
+	if(temp>0){
+		DrawString(400,40*8.5+12,BLACK,TEAL,"Temperature:",2,1);
+		sprintf(roomDeetsString, "%d", temp);
+		DrawString(530,40*8.5+12,BLACK,TEAL,roomDeetsString,2,1);
+	}
+
+
 	if(auto_approve){
-		DrawFillRect(480,650,40*9,40*10,GREEN);
-		DrawString(505,40*9+12,BLACK,GREEN,"Auto-Approve",2,1);
+		DrawFillRect(480,650,40*9.5,40*10.5,GREEN);
+		DrawString(505,40*9.5+12,BLACK,GREEN,"Auto-Approve",2,1);
 	}
 	else{
-		DrawFillRect(480,650,40*9,40*10,CRIMSON);
-		DrawString(505,40*9+12,BLACK,CRIMSON,"Auto-Approve",2,1);
+		DrawFillRect(480,650,40*9.5,40*10.5,CRIMSON);
+		DrawString(505,40*9.5+12,BLACK,CRIMSON,"Auto-Approve",2,1);
 	}
 
 }
@@ -137,7 +150,7 @@ char waitForInterrupt (void){
 	char received_data;
 	while(!ScreenTouched()){
 		if(RS232TestForReceivedData()){
-			delay(1);
+			delay_double(0.1);
 			received_data = getcharRS232();
 			printf("Received: %c\n", received_data);
 			return received_data;
@@ -193,6 +206,8 @@ int InfoChoice( int curr_room_num) {
 		}
 		else if(command=='t'){
 			//TempReadingFunction
+			roomArray[curr_room_num-1].temp = GetTemp();
+			return 99;
 		}
 		else if (command=='3'){
 			roomArray[curr_room_num-1].requested = 1;
@@ -231,6 +246,7 @@ void InitRoomArray(void){
 		roomArray[i].requested = 0;
 		roomArray[i].in_use = 0;
 		roomArray[i].occupied = 0;
+		roomArray[i].temp = 0;
 	}
 	roomArray[3].requested = 1;
 	roomArray[4].requested = 1;
@@ -307,10 +323,10 @@ void RunDisplay(void) {
 				}
 			}
 		}
-		//delay(1);
+		//delay_double(0.1);
 		roomArray[curr_room_num-1].occupied = GetRangeData();
 		printf("Starting Info Display\n");
-		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use);
+		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		for (k = 0; k < 10; k++) {
 			if (roomArray[k].requested == 1) {
 				RequestDotDisplay(k +1);
@@ -318,6 +334,7 @@ void RunDisplay(void) {
 		}
 		//delay(2);
 		PrintNumbers(curr_room_num);
+		//sendTempRequest();
 		last_room_num = InfoChoice(curr_room_num);
 	}
 }
@@ -326,9 +343,9 @@ void TestSerial(void){
 	Init_RS232();
 	while(1){
 		TurnOnLights();
-		delay(1);
+		delay_double(0.1);
 		TurnOffLights();
-		delay(1);
+		delay_double(0.1);
 	}
 }
 

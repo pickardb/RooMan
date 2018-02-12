@@ -1,4 +1,5 @@
 struct room {
+	int temp;
 	int lights;
 	int door;
 	int requested;

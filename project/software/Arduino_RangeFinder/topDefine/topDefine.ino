@@ -17,6 +17,8 @@
 #define DHTpin 4
 dht DHT;
 
+#define buzzerPin 13
+
 // serial pin
 #define RxPin 10
 #define TxPin 11
@@ -31,11 +33,13 @@ dht DHT;
 #define lightOffCommand 'd'
 #define doorOpenCommand 'e'
 #define doorCloseCommand 'f'
+#define tempRequestCommand 'h'
 
 //output message
 #define occupiedMessage '1'
 #define freeMessage '2'
 #define requestRoomMessage '3'
+#define tempMessage 't'
 
                                                                                                                                                            
 

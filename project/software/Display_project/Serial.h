@@ -9,6 +9,7 @@
 #define lightOffCommand 'd'
 #define doorOpenCommand 'e'
 #define doorCloseCommand 'f'
+#define tempRequestCommand 'h'
 #define occupiedMessage '1'
 #define freeMessage '2'
 #define requestRoomMessage '3'
@@ -91,9 +92,17 @@ void TurnOffLights(void) {
 	putcharRS232(lightOffCommand);
 }
 
+void sendTempRequest(void){
+	putcharRS232(tempRequestCommand);
+}
+
 int GetTemp(void){
-	int tens = (int)getcharRS232()-48;
-	int ones = (int)getcharRS232()-48;
+	printf("Getting temp\n");
+	int tens = getcharRS232()-48;
+	printf("tens is %d\n",tens);
+	int ones = getcharRS232()-48;
+	printf("ones is %d\n",ones);
+	printf("temp is %d\n",10*tens+ones);
 	return 10*tens+ones;
 }
 
