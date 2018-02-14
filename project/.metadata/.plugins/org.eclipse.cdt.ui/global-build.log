@@ -1,0 +1,37 @@
+20:51:28 **** Build of configuration Nios II for project test_lcd ****
+make all 
+Info: Building ../test_lcd_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../test_lcd_bsp/
+[BSP build complete]
+Info: Compiling hello_world.c to obj/default/hello_world.o
+nios2-elf-gcc -xc -MP -MMD -c -I../test_lcd_bsp//HAL/inc -I../test_lcd_bsp/ -I../test_lcd_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx  -o obj/default/hello_world.o hello_world.c
+hello_world.c: In function 'main':
+hello_world.c:248:3: warning: implicit declaration of function 'alt_printf' [-Wimplicit-function-declaration]
+   alt_printf ("Error: could not open character LCD device\n");
+   ^
+Info: Linking test_lcd.elf
+nios2-elf-g++  -T'../test_lcd_bsp//linker.x' -msys-crt0='../test_lcd_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../test_lcd_bsp/   -Wl,-Map=test_lcd.map   -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx  -o test_lcd.elf obj/default/hello_world.o -lm -msys-lib=m
+nios2-elf-insert test_lcd.elf --thread_model hal --cpu_name nios2_qsys_0 --qsys true --simulation_enabled false --stderr_dev jtag_uart_0 --stdin_dev jtag_uart_0 --stdout_dev jtag_uart_0 --sopc_system_name nios_system --quartus_project_dir "C:/CPEN391/git/CPEN391-Group14/project" --jdi C:/CPEN391/git/CPEN391-Group14/project/software/test_lcd_bsp/../../DE1_SOC_NIOS.jdi --sopcinfo C:/CPEN391/git/CPEN391-Group14/project/software/test_lcd_bsp/../../nios_system.sopcinfo
+Info: (test_lcd.elf) 69 KBytes program size (code + initialized data).
+Info:                65459 KBytes free for stack + heap.
+Info: Creating test_lcd.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source test_lcd.elf >test_lcd.objdump
+[test_lcd build complete]
+20:52:20 **** Incremental Build of configuration Nios II for project project_lcd ****
+make all 
+Info: Building ../project_lcd_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../project_lcd_bsp/
+[BSP build complete]
+[project_lcd build complete]
+20:52:58 **** Incremental Build of configuration Nios II for project test_lcd ****
+make all 
+Info: Building ../test_lcd_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../test_lcd_bsp/
+[BSP build complete]
+[test_lcd build complete]
+20:53:54 **** Incremental Build of configuration Nios II for project test_lcd ****
+make all 
+Info: Building ../test_lcd_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../test_lcd_bsp/
+[BSP build complete]
+[test_lcd build complete]
