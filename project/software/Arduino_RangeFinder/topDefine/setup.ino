@@ -2,7 +2,7 @@ void setup() {
   
   // initialize serial communication:
   Serial.begin(9600);
-  while(!mySerial){}
+  while(!Serial){}
   
   mySerial.begin(115200);
   while(!mySerial){

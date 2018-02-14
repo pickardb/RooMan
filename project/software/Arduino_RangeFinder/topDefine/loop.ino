@@ -162,4 +162,3 @@ void Temp (void) {
 void doorUnlockTone(void){
   tone(buzzerPin,1000,1500);
 }
-

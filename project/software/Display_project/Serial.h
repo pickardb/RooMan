@@ -93,6 +93,7 @@ void TurnOffLights(void) {
 }
 
 void sendTempRequest(void){
+	printf("Sending Temp Request\n");
 	putcharRS232(tempRequestCommand);
 }
 

@@ -12,6 +12,7 @@
 #include "Touch.h"
 #include "Serial.h"
 #include "Bluetooth-Configuration.h"
+#include "ISR.h"
 
 #define LIGHTS_OFF 11
 #define LIGHTS_ON 12
@@ -21,6 +22,7 @@
 #define ERROR -1
 
 int auto_approve = 0;
+
 
 
 
@@ -157,7 +159,7 @@ char waitForInterrupt (void){
 	char received_data;
 	while(!ScreenTouched()){
 		if(RS232TestForReceivedData()){
-			delay_double(0.1);
+			//delay_double(0.1);
 			received_data = getcharRS232();
 			printf("Received: %c\n", received_data);
 			return received_data;
@@ -198,7 +200,7 @@ int InfoSelect (Point p1){
 	return 0;
 }
 
-int InfoChoice( int curr_room_num) {
+int InfoChoice( int room_num) {
 	Point p1;
 	char command;
 	int ret;
@@ -213,15 +215,15 @@ int InfoChoice( int curr_room_num) {
 		}
 		else if(command=='t'){
 			//TempReadingFunction
-			roomArray[curr_room_num-1].temp = GetTemp();
+			roomArray[room_num-1].temp = GetTemp();
 			return 99;
 		}
 		else if (command=='3'){
-			roomArray[curr_room_num-1].requested = 1;
-			if(auto_approve && roomArray[curr_room_num-1].in_use == 0){
+			roomArray[room_num-1].requested = 1;
+			if(auto_approve && roomArray[room_num-1].in_use == 0){
 				return UNLOCK_DOOR;
 			}
-			else if(auto_approve && roomArray[curr_room_num-1].in_use == 1){
+			else if(auto_approve && roomArray[room_num-1].in_use == 1){
 				return LOCK_DOOR;
 			}
 			return 99;
@@ -261,13 +263,13 @@ void InitRoomArray(void){
 
 void RunDisplay(void) {
 	int last_room_num;
-	int curr_room_num;
 	int k;
 
 	AttemptBluetoothConnection();
 	InitRoomArray();
 	Init_Touch();
 	//Init_RS232();
+	//Init_ISR();
 	BaseDisplay();
 	last_room_num = BaseChoice();
 
@@ -380,4 +382,3 @@ int main(void) {
 
 	return 0;
 }
-

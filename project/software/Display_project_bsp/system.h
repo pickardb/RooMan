@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_qsys_0' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: ../../nios_system.sopcinfo
  *
- * Generated: Thu Feb 08 12:23:47 PST 2018
+ * Generated: Mon Feb 12 15:31:21 PST 2018
  */
 
 /*
@@ -297,7 +297,7 @@
 
 #define ALT_MAX_FD 32
 #define ALT_SYS_CLK TIMER_0
-#define ALT_TIMESTAMP_CLK none
+#define ALT_TIMESTAMP_CLK TIMER_1
 
 
 /*
