@@ -1,0 +1,9 @@
+20:52:20 **** Incremental Build of configuration Nios II for project project_lcd ****
+make all 
+Info: Building ../project_lcd_bsp/
+C:/altera/15.0/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../project_lcd_bsp/
+[BSP build complete]
+[project_lcd build complete]
+
+20:52:21 Build Finished (took 838ms)
+
