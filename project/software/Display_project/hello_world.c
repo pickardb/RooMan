@@ -12,6 +12,8 @@
 #include "Touch.h"
 #include "Serial.h"
 #include "Bluetooth-Configuration.h"
+#include "ISR.h"
+#include "WiFi.h"
 
 #define LIGHTS_OFF 11
 #define LIGHTS_ON 12
@@ -157,7 +159,7 @@ char waitForInterrupt (void){
 	char received_data;
 	while(!ScreenTouched()){
 		if(RS232TestForReceivedData()){
-			delay_double(0.1);
+			//delay_double(0.1);
 			received_data = getcharRS232();
 			printf("Received: %c\n", received_data);
 			return received_data;
@@ -202,6 +204,7 @@ int InfoChoice( int curr_room_num) {
 	Point p1;
 	char command;
 	int ret;
+	char *message = (char*)malloc(100 * sizeof(char));
 	while (1) {
 		printf("Info Choice\n");
 		//p1 = GetPress();
@@ -218,6 +221,8 @@ int InfoChoice( int curr_room_num) {
 		}
 		else if (command=='3'){
 			roomArray[curr_room_num-1].requested = 1;
+			sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);
+			Wifi_Send_Sms(message);
 			if(auto_approve && roomArray[curr_room_num-1].in_use == 0){
 				return UNLOCK_DOOR;
 			}
@@ -261,12 +266,14 @@ void InitRoomArray(void){
 
 void RunDisplay(void) {
 	int last_room_num;
-	int curr_room_num;
+	//int curr_room_num;
 	int k;
 
 	AttemptBluetoothConnection();
 	InitRoomArray();
 	Init_Touch();
+	Wifi_Init();
+	Init_ISR();
 	//Init_RS232();
 	BaseDisplay();
 	last_room_num = BaseChoice();
@@ -373,6 +380,7 @@ void TestSerial(void){
 
 int main(void) {
 
+
 	//TestSerial();
 	RunDisplay();
 
@@ -380,4 +388,3 @@ int main(void) {
 
 	return 0;
 }
-

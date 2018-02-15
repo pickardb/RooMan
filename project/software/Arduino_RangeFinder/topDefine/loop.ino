@@ -13,7 +13,7 @@ SoftwareSerial mySerial(RxPin, TxPin); // RX, TX
 
 void loop() {
   // check the button
-  if(tempCounter<1000){
+  /*if(tempCounter<1000){
     tempCounter++;
     delay(10);
   }
@@ -21,7 +21,7 @@ void loop() {
     Serial.println(" ");
     tempCounter=0;
     Temp();
-  }
+  }*/
 
   //Serial.println("Start of loop");
   checkRequest();
@@ -162,4 +162,3 @@ void Temp (void) {
 void doorUnlockTone(void){
   tone(buzzerPin,1000,1500);
 }
-

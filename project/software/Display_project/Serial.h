@@ -54,9 +54,17 @@ int getbitRS232(void) {
 char getcharRS232(void) {
 	// poll Rx bit in 6850 status register. Wait for it to become '1'
 	// read received characer from 6850 RxData resgister.
+	printf("GetChar\n");
+	//int timeout = 0;
 	int read_status_bit = 0;
+	//delay(1);
 	while(read_status_bit == 0) {
 		read_status_bit = RS232_Status & 0b01;
+		//if(timeout>100000){
+			//printf("GetChar Timeout\n");
+			//return -2;
+		//}
+		//timeout++;
 	}
 	char character = RS232_RxData;
 	return character;

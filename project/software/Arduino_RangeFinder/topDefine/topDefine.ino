@@ -1,4 +1,3 @@
-
 #include <Servo.h>
 #include <SoftwareSerial.h>
 #include <dht.h>
@@ -44,9 +43,9 @@ dht DHT;
                                                                                                                                                            
 
 //magic numbers
-#define rangerFinderThreshold 30
+#define rangerFinderThreshold 10
 #define openPos 180
-#define closedPos 20
+#define closedPos 90
 
 
 
@@ -54,4 +53,3 @@ dht DHT;
 
 
 Servo door;
-

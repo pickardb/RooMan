@@ -97,14 +97,14 @@ int Wifi_For_Received_Data(void) {
 
 void Wifi_Send_Sms(char message[]) {
 	//char lua_sms_command[256];
-	printf("Test starts");
+	printf("Sending sms \n");
 	Wifi_Send_String("dofile(\"project2.lua\")");
 	Wifi_Send_String("check_wifi()");
 	//sprintf(message,
 		//	"send_sms(\"%s\")", message);
 
 	Wifi_Send_String(message);
-	printf("Test passed");
+	printf("sms sent \n");
 	Wifi_Print_Response();
 }
 
