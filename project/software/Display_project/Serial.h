@@ -76,7 +76,7 @@ int GetRangeData(void) {
 	char received_data;
 	putcharRS232(updateRoomStatusCommand);
 	received_data = getcharRS232();
-	if(received_data==occupiedMessage){
+	if(received_data=='5'){
 		return 1;
 	}
 	return 0;

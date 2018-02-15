@@ -44,7 +44,7 @@ dht DHT;
                                                                                                                                                           
 
 //magic numbers
-#define rangerFinderThreshold 10
+#define rangerFinderThreshold 15
 #define openPos 180
 #define closedPos 100
 
