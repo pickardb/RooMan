@@ -231,6 +231,15 @@ int InfoChoice( int curr_room_num) {
 			}
 			return 99;
 		}
+		else if (command == 'L'){
+			if(roomArray[0].lights){
+				roomArray[0].lights = 0;
+			}
+			else{
+				roomArray[0].lights = 1;
+			}
+			return 99;
+		}
 
 	}
 	return -1;
@@ -274,7 +283,7 @@ void RunDisplay(void) {
 	Init_Touch();
 	Wifi_Init();
 	Init_ISR();
-	//Init_RS232();
+
 	BaseDisplay();
 	last_room_num = BaseChoice();
 
@@ -349,7 +358,7 @@ void RunDisplay(void) {
 				}
 			}
 		}
-		//delay_double(0.1);
+
 		roomArray[curr_room_num-1].occupied = GetRangeData();
 		printf("Starting Info Display\n");
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);

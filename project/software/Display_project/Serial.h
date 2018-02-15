@@ -10,10 +10,10 @@
 #define doorOpenCommand 'e'
 #define doorCloseCommand 'f'
 #define tempRequestCommand 'h'
-#define occupiedMessage '1'
+#define occupiedMessage '5'
 #define freeMessage '2'
 #define requestRoomMessage '3'
-
+#define lightChangeMessage 'L'
 
 void Init_RS232(void) {
 	/**
@@ -54,17 +54,15 @@ int getbitRS232(void) {
 char getcharRS232(void) {
 	// poll Rx bit in 6850 status register. Wait for it to become '1'
 	// read received characer from 6850 RxData resgister.
-	printf("GetChar\n");
-	//int timeout = 0;
+	printf("GetChar");
 	int read_status_bit = 0;
-	//delay(1);
+	//int timeout = 0;
 	while(read_status_bit == 0) {
 		read_status_bit = RS232_Status & 0b01;
-		//if(timeout>100000){
-			//printf("GetChar Timeout\n");
-			//return -2;
-		//}
-		//timeout++;
+		/*timeout++;
+		if(timeout >= 100000){
+			printf("GetChar Timeout\n");
+		}*/
 	}
 	char character = RS232_RxData;
 	return character;
@@ -78,7 +76,7 @@ int GetRangeData(void) {
 	char received_data;
 	putcharRS232(updateRoomStatusCommand);
 	received_data = getcharRS232();
-	if(received_data=='1'){
+	if(received_data==occupiedMessage){
 		return 1;
 	}
 	return 0;
@@ -107,9 +105,9 @@ void sendTempRequest(void){
 int GetTemp(void){
 	printf("Getting temp\n");
 	int tens = getcharRS232()-48;
-	printf("tens is %d\n",tens);
+	//printf("tens is %d\n",tens);
 	int ones = getcharRS232()-48;
-	printf("ones is %d\n",ones);
+	//printf("ones is %d\n",ones);
 	printf("temp is %d\n",10*tens+ones);
 	return 10*tens+ones;
 }
@@ -117,3 +115,15 @@ int GetTemp(void){
 void SendSolved (void){
 	putcharRS232(solvedCommand);
 }
+
+/*int sendLightRequest(){
+	putcharRS232(requestLight);
+	int lightStatus = getcharRS232()- 48;
+	if(lightStatus) {
+		printf("Light Status %i, ON \n",lightStatus);
+	}
+	else {
+		printf("Light Status %i, OFF \n",lightStatus);
+	}
+	return lightStatus;
+}*/

@@ -3,20 +3,20 @@
 #include <dht.h>
 
 //all the pin
-
-#define buttonPin 3
+#define pulse 0
+#define buttonPin 4
+#define lightButton 5
 #define ledPin 2
-#define buzzerPin 13
+#define buzzerPin 6
 
 #define servoPin 12
+//#define heartRateButton 6 //may be changed 
+#define uSonicTrig 9
+#define uSonicEcho 8
 
-#define uSonicTrig 8
-#define uSonicEcho 9
-
-#define DHTpin 4
+#define DHTpin 3
 dht DHT;
 
-#define buzzerPin 13
 
 // serial pin
 #define RxPin 10
@@ -33,19 +33,20 @@ dht DHT;
 #define doorOpenCommand 'e'
 #define doorCloseCommand 'f'
 #define tempRequestCommand 'h'
+#define requestLightCommand 'z'
 
 //output message
-#define occupiedMessage '1'
+#define occupiedMessage '5'
 #define freeMessage '2'
 #define requestRoomMessage '3'
 #define tempMessage 't'
-
-                                                                                                                                                           
+#define lightChangeMessage 'L'
+                                                                                                                                                          
 
 //magic numbers
 #define rangerFinderThreshold 10
 #define openPos 180
-#define closedPos 90
+#define closedPos 100
 
 
 
