@@ -178,7 +178,7 @@ int configureBluetoothDongle(){
 	return 1;
 }
 
-int configureMasterBluetoothDongle(){
+void configureMasterBluetoothDongle(){
 	wait();wait();
 	initBluetooth();
 

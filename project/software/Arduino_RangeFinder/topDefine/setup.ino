@@ -9,10 +9,12 @@ void setup() {
     }
     
   Serial.println("Setup complete!");
-  
-  pinMode(uSonicTrig, OUTPUT);
+
   pinMode(uSonicEcho, INPUT);
   pinMode(buttonPin, INPUT);
+  pinMode(lightButton,INPUT);
+ 
+  pinMode(uSonicTrig, OUTPUT);
   pinMode(ledPin, OUTPUT);
 
   door.attach(servoPin);

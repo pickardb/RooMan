@@ -15,7 +15,7 @@ obj/default/hello_world.o: hello_world.c Colours.h Fonts.h Display.h \
  ../Display_project_bsp//HAL/inc/priv/alt_alarm.h \
  ../Display_project_bsp//HAL/inc/sys/alt_irq.h \
  ../Display_project_bsp//HAL/inc/nios2.h \
- ../Display_project_bsp//drivers/inc/altera_avalon_timer_regs.h
+ ../Display_project_bsp//drivers/inc/altera_avalon_timer_regs.h WiFi.h
 
 Colours.h:
 
@@ -68,3 +68,5 @@ ISR.h:
 ../Display_project_bsp//HAL/inc/nios2.h:
 
 ../Display_project_bsp//drivers/inc/altera_avalon_timer_regs.h:
+
+WiFi.h:
