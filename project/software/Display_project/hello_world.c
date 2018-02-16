@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
+#include <sys/alt_irq.h>
 
 //Custom inlcude Files
 #include "Colours.h"
@@ -15,6 +16,7 @@
 #include "ISR.h"
 #include "WiFi.h"
 
+
 #define LIGHTS_OFF 11
 #define LIGHTS_ON 12
 #define LOCK_DOOR 13
@@ -24,22 +26,9 @@
 
 int auto_approve = 0;
 
-
-
-
-void delay(int number_of_seconds) {
-	int milli_seconds = 1000 * number_of_seconds;
-	clock_t start_time = clock();
-	while (clock() < start_time + milli_seconds){}
-}
-
-void delay_double(double number_of_seconds) {
-	int milli_seconds = 1000 * number_of_seconds;
-	clock_t start_time = clock();
-	while (clock() < start_time + milli_seconds){}
-}
-
-
+/*
+ * Display The room selection column on the left hand side of the screen
+ */
 void BaseDisplay(void) {
 	int i;
 	char* roomString;
@@ -54,6 +43,10 @@ void BaseDisplay(void) {
 	printf("Base Displayed \n");
 }
 
+/*
+ * Full Room status Display. Base display on the left, and room status on the right
+ * Takes in the current room number and info about that room and displays it on the screen
+ */
 void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use, int temp) {
 	int i;
 
@@ -129,6 +122,9 @@ void InfoDisplay(int room_num, int lights, int door, int occupied, int in_use, i
 
 }
 
+/*
+ * Draws a small Red square next to the given room number
+ */
 void RequestCloseDisplay(int room_num) {
 
 	DrawFillRect(315, 335, 40 * room_num + 10, 40 * (room_num + 1) - 10, RED);
@@ -136,6 +132,9 @@ void RequestCloseDisplay(int room_num) {
 
 }
 
+/*
+ * Draws a small green square next to the given room number
+ */
 void RequestOpenDisplay(int room_num) {
 
 	DrawFillRect(315, 335, 40 * room_num + 10, 40 * (room_num + 1) - 10, GREEN);
@@ -143,6 +142,10 @@ void RequestOpenDisplay(int room_num) {
 
 }
 
+/*
+ * A function to check where the user has pressed after the base display.
+ * If the user selects a room, it returns the appropriate room number
+ */
 int BaseChoice(void) {
 	Point p1;
 	while (1) {
@@ -156,6 +159,10 @@ int BaseChoice(void) {
 	return -1;
 }
 
+/*
+ * A function which waits for either the screen to be touched or receive a serial command
+ * upon receving a command or touch data, it returns the command/data
+ */
 char waitForInterrupt (void){
 	char received_data;
 	while(!ScreenTouched()){
@@ -168,6 +175,11 @@ char waitForInterrupt (void){
 	}
 	return 0;
 }
+
+/*
+ * A function to check where the user has pressed on the room status screen
+ * Returns the room number if pressed, or a specific command for certain button presses
+ */
 
 int InfoSelect (Point p1){
 	if (p1.x >= 100 && p1.x <= 300 && p1.y >= 40 && p1.y <= 440) {
@@ -201,6 +213,11 @@ int InfoSelect (Point p1){
 	return 0;
 }
 
+/*
+ * Calls wait for interrupt, and receives the returned command
+ * Determines the correct command to execute and returns a corresponding command
+ * to the main loop which will execute the command
+ */
 int InfoChoice( int room_num) {
 	Point p1;
 	char command;
@@ -208,7 +225,6 @@ int InfoChoice( int room_num) {
 	char *message = (char*)malloc(100 * sizeof(char));
 	while (1) {
 		printf("Info Choice\n");
-		//p1 = GetPress();
 		command = waitForInterrupt();
 		if(command==0){
 			p1 = GetBasePress();
@@ -246,6 +262,10 @@ int InfoChoice( int room_num) {
 	return -1;
 }
 
+/*
+ * Prints the room numbers on top of the left hand room select column,
+ * with the selected room having a different background
+ */
 void PrintNumbers(int room_num) {
 	int j;
 	char* roomString = NULL;
@@ -260,6 +280,10 @@ void PrintNumbers(int room_num) {
 	}
 }
 
+/*
+ * Initializes all the values in the room data array.
+ * Also hardcodes requests into room 3 and 4 for testing and demo purposes
+ */
 void InitRoomArray(void){
 	int i;
 	for (i = 0; i < 10; i++) {
@@ -274,9 +298,15 @@ void InitRoomArray(void){
 	roomArray[4].requested = 1;
 }
 
+/*
+ * Main loop to run the program.
+ * Starts off initialzing all the serial outputs and bluetooth
+ * Continues into the display and gets the users touchscreen press
+ * Executes the commands returned from InfoChoice() and updates the roomArray as necessary
+ */
 void RunDisplay(void) {
+
 	int last_room_num;
-	//int curr_room_num;
 	int k;
 
 	AttemptBluetoothConnection();
@@ -371,27 +401,15 @@ void RunDisplay(void) {
 				RequestOpenDisplay(k +1);
 			}
 		}
-		//delay(2);
 		PrintNumbers(curr_room_num);
-		//sendTempRequest();
 		last_room_num = InfoChoice(curr_room_num);
 	}
 }
 
-void TestSerial(void){
-	Init_RS232();
-	while(1){
-		TurnOnLights();
-		delay_double(0.1);
-		TurnOffLights();
-		delay_double(0.1);
-	}
-}
 
 int main(void) {
 
 
-	//TestSerial();
 	RunDisplay();
 
 	printf("Finished");
