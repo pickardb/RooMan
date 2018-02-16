@@ -49,7 +49,6 @@ void Init_Touch(void)
 	putCharTouch(0x01);
 	putCharTouch(0x12);
 
-	usleep(10000);
 }
 
 /*****************************************************************************
@@ -73,94 +72,36 @@ void WaitForTouch()
 }
 
 
-
-
 /*****************************************************************************
  * This function waits for a touch screen press event and returns X,Y coord
  *****************************************************************************/
 
-
-Point GetPen(void){
+Point GetBasePress(void){
 	Point p1;
 	int packets[4];
 	char command;
-	// wait for a pen down command then return the X,Y coord of the point
-	// calibrated correctly so that it maps to a pixel on screen
+
+	//Wait for the touchscreen to return 0x80
 	WaitForTouch();
+
+	//Get the 4 ints for the position
 	int i;
 	for(i = 0; i < 4; i++){
 		packets[i] = getCharTouch();
 	}
 
-	// Get x11 : x7 from 2nd packet, and concatenate to x6 : x0 from 1st packet
+	//combine the two packets for each int into the actual position value
 	p1.x = (packets[1] << 7) | packets[0];
 	p1.y = (packets[3] << 7) | packets[2];
 
-	// Map from controller resolution to screen pixel
+	// Map from resolution to pixel
 	p1.x = p1.x * 799 / 4095;
 	p1.y = p1.y  * 479 / 4095;
 
 	printf("x = %d ", p1.x);
 	printf("y = %d\n", p1.y);
 
-	/*if(GetButtonPress()){
-			roomArray[0].requested = 1;
-		}
-		else {
-			roomArray[0].requested = 0;
-		}*/
 
-	return p1;
-}
-
-Point GetPress(void)
-{
-	Point p1;
-	// wait for a pen down command then return the X,Y coord of the point
-	// calibrated correctly so that it maps to a pixel on screen
-	p1 = GetPen();
-	return p1;
-}
-
-Point GetBasePen(void){
-	Point p1;
-	int packets[4];
-	char command;
-	// wait for a pen down command then return the X,Y coord of the point
-	// calibrated correctly so that it maps to a pixel on screen
-	WaitForTouch();
-	int i;
-	for(i = 0; i < 4; i++){
-		packets[i] = getCharTouch();
-	}
-
-	// Get x11 : x7 from 2nd packet, and concatenate to x6 : x0 from 1st packet
-	p1.x = (packets[1] << 7) | packets[0];
-	p1.y = (packets[3] << 7) | packets[2];
-
-	// Map from controller resolution to screen pixel
-	p1.x = p1.x * 799 / 4095;
-	p1.y = p1.y  * 479 / 4095;
-
-	printf("x = %d ", p1.x);
-	printf("y = %d\n", p1.y);
-
-	/*if(GetButtonPress()){
-			roomArray[0].requested = 1;
-		}
-		else {
-			roomArray[0].requested = 0;
-		}*/
-
-	return p1;
-}
-
-Point GetBasePress(void)
-{
-	Point p1;
-	// wait for a pen down command then return the X,Y coord of the point
-	// calibrated correctly so that it maps to a pixel on screen
-	p1 = GetBasePen();
 	return p1;
 }
 
