@@ -2,30 +2,25 @@
 #include <SoftwareSerial.h>
 #include <dht.h>
 
-//all the pin
+//all the pin definitions
 #define pulse 0
+#define ledPin 2
+#define DHTpin 3
 #define buttonPin 4
 #define lightButton 5
-#define ledPin 2
 #define buzzerPin 6
-
-#define servoPin 12
-//#define heartRateButton 6 //may be changed 
-#define uSonicTrig 9
 #define uSonicEcho 8
+#define uSonicTrig 9
+#define servoPin 12 
 
-#define DHTpin 3
 dht DHT;
-
-
 // serial pin
 #define RxPin 10
 #define TxPin 11
-
 #define ROOM_TEMP 22
 
 
-//input command
+//input commands
 #define solvedCommand 'a'
 #define updateRoomStatusCommand 'b' //free or occupied
 #define lightOnCommand 'c'
@@ -47,10 +42,5 @@ dht DHT;
 #define rangerFinderThreshold 15
 #define openPos 180
 #define closedPos 100
-
-
-
-
-
 
 Servo door;
