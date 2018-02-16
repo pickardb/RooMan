@@ -230,7 +230,11 @@ void OutGraphicsCharFont2(int x, int y, int fontcolour, int backgroundcolour, in
 }
 
 
-
+/*
+ * Fucntion to Draw a string of a given font size
+ * Takes in a position, color background color, string, and font size
+ *
+ */
 void DrawString(int x,int y, int colour, int background, char* string, int font, int erase){
 	int i;
 	if(font==1){
