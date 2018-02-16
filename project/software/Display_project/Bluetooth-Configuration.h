@@ -1,17 +1,7 @@
 /*
- * "Hello World" example.
- *
- * This example prints 'Hello from Nios II' to the STDOUT stream. It runs on
- * the Nios II 'standard', 'full_featured', 'fast', and 'low_cost' example
- * designs. It runs with or without the MicroC/OS-II RTOS and requires a STDOUT
- * device in your system's hardware.
- * The memory footprint of this hosted application is ~69 kbytes by default
- * using the standard reference design.
- *
- * For a reduced footprint version of this template, and an explanation of how
- * to reduce the memory footprint for a given application, see the
- * "small_hello_world" template.
- *
+ * This is the Bluetooth Configuration file. It provides the means
+ * to setup the Bluetooth modules, Master and Slave and to connect
+ * one to the other.
  */
 
 #include <stdio.h>
@@ -63,6 +53,9 @@ char getcharBluetooth(void) {
 	return character;
 }
 
+/**
+ * Stalls a NIOS II f processor for roughly 2 seconds.
+ */
 void wait(){
 	int i=0;
 	while(i<1000){
@@ -75,21 +68,28 @@ void wait(){
 	}
 }
 
+/**
+ * Sends a string of data through the GPIO trasmitter pin.
+ */
 void writeDataToTx(char * data){
 	int i;
 	printf("Sending %s\n", data);
 	for(i=0; data[i]!=NULL; i++){
-		// IORD_8DIRECT(RS232_TxData, data[i]);
-		// *RS232_TxData = data[i];
 		putcharBluetooth(data[i]);
 	}
 }
 
+/**
+ * Reads a string of data through the GPIO receiver pin.
+ * Note the maximum readible string is 364 characters.
+ */
 void readDataFromTx(){
 	int bufferSize = 365;
 	char buffer[bufferSize];
 	int i;
 
+	//Read no more than bufferSize-1 characters to allow room for
+	//the string terminating character
 	for(i=0; i<bufferSize-1; i++){
 		buffer[i] = getcharBluetooth();
 		if(buffer[i] == '\n'){
@@ -110,12 +110,12 @@ void initBluetooth(){
 	printf("Initializing bluetooth control register\n");
 	RS232_Control = 0b00000011;
 	RS232_Control = 0b10010101;
-	RS232_Baud = 0b00000001;
+	RS232_Baud = 0b00000001; //Setup the 115k baud rate to match the Bluetooth module
 }
 
 void enterCommandMode(){
 	writeDataToTx("$$$");
-	getcharBluetooth(); //pull garbage value
+	getcharBluetooth(); //Pull garbage value
 }
 
 void reset(){
@@ -126,15 +126,18 @@ void setAuthenticationMode(){
 	writeDataToTx("SA,4\r\n");
 }
 
-void name(char * newName){
-	// RS232_TxData = "SN," + newName + "\r\n";
-	writeDataToTx("SN,group14-Slave\r\n");
+void name(){
+	writeDataToTx("SN,group14\r\n");
 }
 
-void setPassword(char * newPassword){
+void setPassword(){
 	writeDataToTx("SP,1414\r\n");
 }
 
+/**
+ * Attempts to connect the wired Master Bluetooth module
+ * to the Slave Bluetooth module
+ */
 void AttemptBluetoothConnection(){
 	wait();wait();
 	initBluetooth();
@@ -146,10 +149,20 @@ void AttemptBluetoothConnection(){
 	writeDataToTx("C\r\n");
 }
 
+/**
+ * Sends a command to the wired Bluetooth module to
+ * exit command mode and return to data mode.
+ */
 void exitCommandMode(){
 	writeDataToTx("---\r\n");
 }
 
+/**
+ * Configures the Bluetooth module to be named "group14",
+ * set with password "1414", and disable authentication to
+ * allow a straight-forward connection between Bluetooth
+ * modules 
+ */
 int configureBluetoothDongle(){
 
 	wait();wait();
@@ -160,11 +173,11 @@ int configureBluetoothDongle(){
 	readDataFromTx();
 
 	wait();wait();
-	name("group14");
+	name();
 	readDataFromTx();
 
 	wait();wait();
-	setPassword("1414");
+	setPassword();
 	readDataFromTx();
 
 	wait();wait();
@@ -176,14 +189,5 @@ int configureBluetoothDongle(){
 	readDataFromTx();
 
 	return 1;
-}
-
-void configureMasterBluetoothDongle(){
-	wait();wait();
-	initBluetooth();
-
-	wait();wait();
-	enterCommandMode();
-	readDataFromTx();
 }
 
