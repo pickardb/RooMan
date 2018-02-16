@@ -13,34 +13,17 @@ int lastLightButtonState = 0;  // previous state of the button
 int lightStatus = 0;
 
 
-//for the heart rate
-int heartRateButtonState = 0;
-int lastHeartButtonState = 0;
-int firstPulse = 0;
-int secondPulse = 0;
-int sleep = 0;
-int pulseStart = 0;
-int heartRate = -1;
-int heartRateState = 1;
 SoftwareSerial mySerial(RxPin, TxPin); // RX, TX
 
 
 void loop() {
-  // check the button
-  /*if(tempCounter<1000){
-    tempCounter++;
-    delay(10);
-    }
-    else{
-    Serial.println(" ");
-    tempCounter=0;
-    Temp();
-    }*/
-  
-  //Serial.println("Start of loop");
+
+  //check request button
   checkRequest();
+  //check light switch
   checkLight();
-  //checkHeartRateRequest();
+
+  //reading serial command if there is a incoming message
   if (mySerial.available()) {
 
     Serial.println("trying to read command");
@@ -58,6 +41,7 @@ void loop() {
 
 void checkRequest(void) {
   buttonState = digitalRead(buttonPin);
+  //check if the button is pressed
   if (buttonState != lastButtonState) {
     if (buttonState == HIGH) {
       request = 1;
@@ -69,6 +53,7 @@ void checkRequest(void) {
     // Delay a little bit to avoid bouncing
     delay(50);
 
+    //sending room request message via serial
     if (request && !sent) {
       sendSingleSerialCommand(requestRoomMessage);
       sent = 1;
@@ -80,6 +65,7 @@ void checkRequest(void) {
 
 void checkLight() {
    lightButtonState = digitalRead(lightButton);
+   //check if the button is pressed
     if(lightButtonState != lastLightButtonState) {
     if (lightButtonState == HIGH) {
       if(lightStatus) {
@@ -105,8 +91,7 @@ void checkLight() {
   }
   // save the current state as the last state, for next time through the loop
   lastLightButtonState = lightButtonState;
-  
-  }
+}
 
 
 void executeCommand(char incomingCommand) {
@@ -159,29 +144,19 @@ void executeCommand(char incomingCommand) {
     case tempRequestCommand:
       Serial.println("Update Temperature");
       Temp();
-      break;
-
-    /*case requestLightCommand:
-      Serial.println("Update Light Status");
-      if(lightStatus) {
-        sendSingleSerialCommand('1');
-        }
-      else{
-        sendSingleSerialCommand('0');
-        }*/
-      break;
-      
+      break;     
     default:
       Serial.print("Unknow command: ");
       Serial.println(incomingCommand);
+      break;
   }
 }
 
 void sendSingleSerialCommand(char command) {
   Serial.print("Sending Command:");
   Serial.println(command);
+  //send command via serial
   mySerial.print(command);
-  //mySerial.print('\0');
 }
 
 
@@ -193,68 +168,20 @@ void Temp (void) {
   switch (chk)
   {
     case DHTLIB_OK:
+      //get the digits of the temperature
       temp = DHT.temperature;
       tens = temp / 10;
       ones = temp % 10;
-      Serial.print("temp: ");
-      Serial.print(temp);
-      Serial.print(", tens: ");
-      Serial.print(tens);
-      Serial.print(", ones: ");
-      Serial.println(ones);
       sendSingleSerialCommand(tempMessage);
       delay(100);
+      //converting int to char
       sendSingleSerialCommand(tens + 48);
       delay(100);
+      //converting int to char
       sendSingleSerialCommand(ones + 48);
       break;
   }
 }
-
-/*void checkHeartRateRequest(void) {
-  //Serial.println("Test 1 ==========");
-  heartRateButtonState = digitalRead(heartRateButton);
-  if (heartRateButtonState != lastHeartButtonState) {
-    // if the state has changed, start the heart rate recording
-    if (heartRateButtonState == HIGH) {
-      while (heartRateState == 1) {
-        Serial.println("Heart rate reading is started\n");
-        heartRate = analogRead(pulse);
-        Serial.println(heartRate);
-        if (heartRate == 0 || heartRate < 10) {
-          pulseStart = 1;
-          firstPulse = millis();
-        }
-
-        if (heartRate < 400 && pulseStart == 1) {
-          secondPulse = millis();
-          sleep = secondPulse - firstPulse;
-          if (sleep > 2000) {
-            tone(buzzerPin, 1000, 1000);
-            heartRateState = 0;
-          }
-         else if (heartRate > 900 && pulseStart == 1 && sleep>2000) {
-          tone(buzzerPin, 1000, 1000);
-          heartRateState = 0;
-        }
-        if(heartRateState == 0)
-        break;
-      }
-    }
-    }
-    else {
-      //falling edge
-        heartRateState = 0;
-        pulseStart = 0;
-    }
-    
-    // Delay a little bit to avoid bouncing
-    delay(50);
-  }
-  // save the current state as the last state, for next time through the loop
-  lastHeartButtonState = heartRateButtonState;
-  
-}*/
 
 void doorUnlockTone(void) {
   tone(buzzerPin, 1000, 1500);
