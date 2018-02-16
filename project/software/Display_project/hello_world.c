@@ -236,10 +236,11 @@ int InfoChoice( int room_num) {
 			roomArray[room_num-1].temp = GetTemp();
 			return 99;
 		}
+		// If the request a room button was pressed   
 		else if (command=='3'){
 			roomArray[curr_room_num-1].requested = 1;
-			sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);
-			Wifi_Send_Sms(message);
+			sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);	// Customizes the message to specify which room was requested
+			Wifi_Send_Sms(message);								// Sends the message through Wi-Fi chip  
 			if(auto_approve && roomArray[curr_room_num-1].in_use == 0){
 				return UNLOCK_DOOR;
 			}
@@ -309,6 +310,7 @@ void RunDisplay(void) {
 	int last_room_num;
 	int k;
 
+	// Initialization of all internal and external components
 	AttemptBluetoothConnection();
 	InitRoomArray();
 	Init_Touch();
@@ -408,7 +410,6 @@ void RunDisplay(void) {
 
 
 int main(void) {
-
 
 	RunDisplay();
 
