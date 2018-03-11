@@ -308,6 +308,97 @@ void InitRoomArray(void){
 }
 
 /*
+ * Takes in a command, and executes the command, either selecting a room or changing some hardware
+ */
+void executeCommand (int last_room_num){
+	int k;
+	if (last_room_num >= 1 && last_room_num <= 10) {
+				curr_room_num = last_room_num;
+			}
+			else if (last_room_num == ERROR) {
+				printf("Error, my dude\n");
+			}
+			else if (last_room_num == LIGHTS_OFF) {
+				roomArray[curr_room_num - 1].lights = 0;
+				if (curr_room_num == 1) {
+					TurnOffLights();
+				}
+			}
+			else if (last_room_num == LIGHTS_ON) {
+				roomArray[curr_room_num - 1].lights = 1;
+				if (curr_room_num == 1) {
+					TurnOnLights();
+				}
+			}
+			else if (last_room_num == LOCK_DOOR) {
+				roomArray[curr_room_num - 1].door = 0;
+				if (curr_room_num == 1) {
+					CloseServo();
+				}
+				if (roomArray[curr_room_num - 1].in_use==0 && roomArray[curr_room_num - 1].requested ) {
+					roomArray[curr_room_num - 1].requested = 0;
+				}
+				else if (roomArray[curr_room_num - 1].in_use==1 && roomArray[curr_room_num - 1].requested ) {
+					roomArray[curr_room_num - 1].requested = 0;
+					roomArray[curr_room_num-1].in_use = 0;
+					roomArray[curr_room_num-1].lights = 0;
+					if (curr_room_num == 1) {
+						CloseServo();
+						TurnOffLights();
+					}
+				}
+			} else if (last_room_num == UNLOCK_DOOR) {
+				roomArray[curr_room_num - 1].door = 1;
+				if (curr_room_num == 1) {
+					OpenServo();
+				}
+				if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
+					roomArray[curr_room_num - 1].requested = 0;
+					roomArray[curr_room_num - 1].in_use = 1;
+					roomArray[curr_room_num - 1].lights = 1;
+					if (curr_room_num == 1) {
+						OpenServo();
+						TurnOnLights();
+
+					}
+				}
+			}
+			else if (last_room_num == AUTO_APPROVE){
+				if(auto_approve){
+					auto_approve=0;
+				}
+				else{
+					auto_approve = 1;
+					for (k = 0; k < 10; k++) {
+						if(roomArray[k].requested){
+							roomArray[k].requested=0;
+							roomArray[k].in_use = 1;
+							roomArray[k].door = 1;
+							if (k == 0) {
+								OpenServo();
+							}
+						}
+					}
+				}
+			}
+}
+
+/*
+ * For each room, checks if there is a request. If so, prints the request indicator on the screen
+ */
+void displayRequests (void){
+	int k;
+	for (k = 0; k < 10; k++) {
+		if (roomArray[k].requested == 1 && roomArray[k].in_use==1) {
+			RequestCloseDisplay(k +1);
+		}
+		else if (roomArray[k].requested == 1 && roomArray[k].in_use==0) {
+			RequestOpenDisplay(k +1);
+		}
+	}
+}
+
+/*
  * Main loop to run the program.
  * Starts off initialzing all the serial outputs and bluetooth
  * Continues into the display and gets the users touchscreen press
@@ -316,7 +407,6 @@ void InitRoomArray(void){
 void RunDisplay(void) {
 
 	int last_room_num;
-	int k;
 
 	// Initialization of all internal and external components
 	AttemptBluetoothConnection();
@@ -328,89 +418,11 @@ void RunDisplay(void) {
 	BaseDisplay();
 	last_room_num = BaseChoice();
 
-
 	while (1) {
-		if (last_room_num >= 1 && last_room_num <= 10) {
-			curr_room_num = last_room_num;
-		}
-		else if (last_room_num == ERROR) {
-			printf("Error, my dude\n");
-		}
-		else if (last_room_num == LIGHTS_OFF) {
-			roomArray[curr_room_num - 1].lights = 0;
-			if (curr_room_num == 1) {
-				TurnOffLights();
-			}
-		}
-		else if (last_room_num == LIGHTS_ON) {
-			roomArray[curr_room_num - 1].lights = 1;
-			if (curr_room_num == 1) {
-				TurnOnLights();
-			}
-		}
-		else if (last_room_num == LOCK_DOOR) {
-			roomArray[curr_room_num - 1].door = 0;
-			if (curr_room_num == 1) {
-				CloseServo();
-			}
-			if (roomArray[curr_room_num - 1].in_use==0 && roomArray[curr_room_num - 1].requested ) {
-				roomArray[curr_room_num - 1].requested = 0;
-			}
-			else if (roomArray[curr_room_num - 1].in_use==1 && roomArray[curr_room_num - 1].requested ) {
-				roomArray[curr_room_num - 1].requested = 0;
-				roomArray[curr_room_num-1].in_use = 0;
-				roomArray[curr_room_num-1].lights = 0;
-				if (curr_room_num == 1) {
-					CloseServo();
-					TurnOffLights();
-				}
-			}
-		} else if (last_room_num == UNLOCK_DOOR) {
-			roomArray[curr_room_num - 1].door = 1;
-			if (curr_room_num == 1) {
-				OpenServo();
-			}
-			if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
-				roomArray[curr_room_num - 1].requested = 0;
-				roomArray[curr_room_num - 1].in_use = 1;
-				roomArray[curr_room_num - 1].lights = 1;
-				if (curr_room_num == 1) {
-					OpenServo();
-					TurnOnLights();
-
-				}
-			}
-		}
-		else if (last_room_num == AUTO_APPROVE){
-			if(auto_approve){
-				auto_approve=0;
-			}
-			else{
-				auto_approve = 1;
-				for (k = 0; k < 10; k++) {
-					if(roomArray[k].requested){
-						roomArray[k].requested=0;
-						roomArray[k].in_use = 1;
-						roomArray[k].door = 1;
-						if (k == 0) {
-							OpenServo();
-						}
-					}
-				}
-			}
-		}
-
-		//roomArray[curr_room_num-1].occupied = GetRangeData();
+		executeCommand(last_room_num);
 		printf("Starting Info Display\n");
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
-		for (k = 0; k < 10; k++) {
-			if (roomArray[k].requested == 1 && roomArray[k].in_use==1) {
-				RequestCloseDisplay(k +1);
-			}
-			else if (roomArray[k].requested == 1 && roomArray[k].in_use==0) {
-				RequestOpenDisplay(k +1);
-			}
-		}
+		displayRequests();
 		PrintNumbers(curr_room_num);
 		last_room_num = InfoChoice(curr_room_num);
 	}
