@@ -8,13 +8,14 @@ int curr_room_num;
 
 void timer_0_ISR(void* context, alt_u32 id)
 {
-	printf("Starting Interruppt\n");
+	printf("\nStarting Interruppt\n");
    // clear irq status in order to prevent retriggering
    IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0);
 
-   sendAndGetTemp();
+   	SendRangeRequest();
+   	sendTempRequest();
 
-   printf("Finished Interrupt\n");
+   printf("Finished Interrupt\n\n");
 
 }
 
@@ -36,8 +37,8 @@ void Init_ISR(void){
 }
 
 void sendAndGetTemp (void){
-	sendTempRequest();
-	printf("Getting temp\n");
+
+	/*printf("Getting temp\n");
 	while (getcharRS232()!='t'){}
 	int tens = getcharRS232()-48;
 	//printf("tens is %d\n",tens);
@@ -58,5 +59,5 @@ void sendAndGetTemp (void){
 			RequestOpenDisplay(k +1);
 		}
 	}
-	PrintNumbers(curr_room_num);
+	PrintNumbers(curr_room_num);*/
 }

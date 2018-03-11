@@ -54,15 +54,9 @@ int getbitRS232(void) {
 char getcharRS232(void) {
 	// poll Rx bit in 6850 status register. Wait for it to become '1'
 	// read received characer from 6850 RxData resgister.
-	printf("GetChar");
 	int read_status_bit = 0;
-	//int timeout = 0;
 	while(read_status_bit == 0) {
 		read_status_bit = RS232_Status & 0b01;
-		/*timeout++;
-		if(timeout >= 100000){
-			printf("GetChar Timeout\n");
-		}*/
 	}
 	char character = RS232_RxData;
 	return character;
@@ -74,14 +68,15 @@ int RS232TestForReceivedData(void) {
 
 int GetRangeData(void) {
 	char received_data;
-	putcharRS232(updateRoomStatusCommand);
 	received_data = getcharRS232();
 	if(received_data=='5'){
 		return 1;
 	}
 	return 0;
 }
-
+void SendRangeRequest(void){
+	putcharRS232(updateRoomStatusCommand);
+}
 void OpenServo(void) {
 	putcharRS232(doorOpenCommand);
 }
@@ -104,12 +99,12 @@ void sendTempRequest(void){
 }
 
 int GetTemp(void){
-	printf("Getting temp\n");
+	printf("\nGetting temp\n");
 	int tens = getcharRS232()-48;
 	//printf("tens is %d\n",tens);
 	int ones = getcharRS232()-48;
 	//printf("ones is %d\n",ones);
-	printf("temp is %d\n",10*tens+ones);
+	printf("Temp is %d\n\n",10*tens+ones);
 	return 10*tens+ones;
 }
 

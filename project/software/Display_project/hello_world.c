@@ -224,7 +224,7 @@ int InfoChoice( int room_num) {
 	int ret;
 	char *message = (char*)malloc(100 * sizeof(char));
 	while (1) {
-		printf("Info Choice\n");
+		//printf("Info Choice\n");
 		command = waitForInterrupt();
 		if(command==0){
 			p1 = GetBasePress();
@@ -236,11 +236,19 @@ int InfoChoice( int room_num) {
 			roomArray[room_num-1].temp = GetTemp();
 			return 99;
 		}
+		else if(command=='5'){
+			//Room is occupied
+			roomArray[room_num-1].occupied = 1;
+		}
+		else if(command=='2'){
+			//Room is free
+			roomArray[room_num-1].occupied = 0;
+		}
 		// If the request a room button was pressed   
 		else if (command=='3'){
 			roomArray[curr_room_num-1].requested = 1;
-			sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);	// Customizes the message to specify which room was requested
-			Wifi_Send_Sms(message);								// Sends the message through Wi-Fi chip  
+			//sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);	// Customizes the message to specify which room was requested
+			//Wifi_Send_Sms(message);								// Sends the message through Wi-Fi chip
 			if(auto_approve && roomArray[curr_room_num-1].in_use == 0){
 				return UNLOCK_DOOR;
 			}
@@ -314,7 +322,7 @@ void RunDisplay(void) {
 	AttemptBluetoothConnection();
 	InitRoomArray();
 	Init_Touch();
-	Wifi_Init();
+	//Wifi_Init();
 	Init_ISR();
 
 	BaseDisplay();
@@ -392,7 +400,7 @@ void RunDisplay(void) {
 			}
 		}
 
-		roomArray[curr_room_num-1].occupied = GetRangeData();
+		//roomArray[curr_room_num-1].occupied = GetRangeData();
 		printf("Starting Info Display\n");
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		for (k = 0; k < 10; k++) {
