@@ -24,6 +24,9 @@ HOST = "iot-https-relay.appspot.com"
 -- use the first one if you want to send a text to a cell phone
 -- use the second (commented out) one if you want to make a call to a cell phone � that�s the only change
 URI = "/twilio/Messages.json"
+
+HOST_DB = "35.202.73.165"
+
 --URI = "/twilio/Calls.json"
 
 function build_post_request(host, uri, data_table)
@@ -34,10 +37,34 @@ function build_post_request(host, uri, data_table)
           data = data .. param.."="..value.."&"
      end
 
+	 data = string.sub(data, 0, -2)
+	   
      request = "POST "..uri.." HTTP/1.1\r\n"..
      "Host: "..host.."\r\n"..
      "Connection: close\r\n"..
      "Content-Type: application/x-www-form-urlencoded\r\n"..
+     "Content-Length: "..string.len(data).."\r\n"..
+     "\r\n"..
+     data
+     print(request)
+     return request
+end
+
+function build_database_request(host, data_table)
+
+     data = ""
+
+     for param,value in pairs(data_table) do
+          data = data .. param.."="..value.."&"
+     end
+
+	 data = string.sub(data, 0, -2)
+     data = data_table['data']
+	   
+     request = "PATCH ".."/Users/31326325.json".." HTTP/1.1\r\n"..
+     "Host: "..host.."\r\n"..
+     "Connection: close\r\n"..
+     "Content-Type: text/html\r\n"..
      "Content-Length: "..string.len(data).."\r\n"..
      "\r\n"..
      data
@@ -72,6 +99,41 @@ function send_sms(body)
           post_request = build_post_request(HOST,URI,data)
           sck:send(post_request)
      end)
+end
+
+function send_to_db(data_table)
+
+	json = "{\"room\" : "..data_table["room_number"].."}"
+		
+	
+	data = {
+	--	path = "/Rooms",
+        data = json
+	}
+	
+	socket = net.createConnection(net.TCP,0)
+	socket:on("receive", display)
+    socket:connect(80,HOST_DB)
+	
+	socket:on("connection", function(sck)
+	post_request = build_database_request(HOST_DB, data)
+	sck:send(post_request)
+    end)
+end
+
+function write_data_firebase(room)
+	ip = wifi.sta.getip()
+	
+	if(ip==nil)then
+		print("No connection established")
+	else
+		tmr.stop(0)
+		json_data = {
+			room_number = room
+		}
+	
+	send_to_db(json_data)
+	end
 end
 
 function check_wifi()
