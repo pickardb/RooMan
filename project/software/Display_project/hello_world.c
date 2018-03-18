@@ -247,8 +247,8 @@ int InfoChoice( int room_num) {
 		// If the request a room button was pressed   
 		else if (command=='3'){
 			roomArray[curr_room_num-1].requested = 1;
-			//sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);	// Customizes the message to specify which room was requested
-			//Wifi_Send_Sms(message);								// Sends the message through Wi-Fi chip
+			sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);	// Customizes the message to specify which room was requested
+			Wifi_Send_Sms(message);								// Sends the message through Wi-Fi chip
 			// For the De1 and database connection the data format follows: patch_rooms_firebase("/-L7R1brj3jYyLGkYq64_.json","false", "true", "false", "true", "9")
 			// patch_rooms_firebase(data_path, use_var, light_var, lock_var, occup_var, temp_var)  
 			// get_rooms_firebase("/-L7R1brj3jYyLGkYq64_.json","true", "true", "true", "true", "0")
@@ -317,74 +317,86 @@ void InitRoomArray(void){
 void executeCommand (int last_room_num){
 	int k;
 	if (last_room_num >= 1 && last_room_num <= 10) {
-				curr_room_num = last_room_num;
+			curr_room_num = last_room_num;
+		}
+	else if (last_room_num == ERROR) {
+		printf("Error, my dude\n");
+	}
+	else if (last_room_num == LIGHTS_OFF) {
+		roomArray[curr_room_num - 1].lights = 0;
+		if (curr_room_num == 1) {
+			TurnOffLights();
+		}
+	}
+	else if (last_room_num == LIGHTS_ON) {
+		roomArray[curr_room_num - 1].lights = 1;
+		if (curr_room_num == 1) {
+			TurnOnLights();
+		}
+	}
+	else if (last_room_num == LOCK_DOOR) {
+		roomArray[curr_room_num - 1].door = 0;
+		if (curr_room_num == 1) {
+			CloseServo();
+		}
+		if (roomArray[curr_room_num - 1].in_use==0 && roomArray[curr_room_num - 1].requested ) {
+			roomArray[curr_room_num - 1].requested = 0;
+		}
+		else if (roomArray[curr_room_num - 1].in_use==1 && roomArray[curr_room_num - 1].requested ) {
+			roomArray[curr_room_num - 1].requested = 0;
+			roomArray[curr_room_num-1].in_use = 0;
+			roomArray[curr_room_num-1].lights = 0;
+			if (curr_room_num == 1) {
+				CloseServo();
+				TurnOffLights();
 			}
-			else if (last_room_num == ERROR) {
-				printf("Error, my dude\n");
+		}
+	} else if (last_room_num == UNLOCK_DOOR) {
+		roomArray[curr_room_num - 1].door = 1;
+		if (curr_room_num == 1) {
+			OpenServo();
+		}
+		if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
+			roomArray[curr_room_num - 1].requested = 0;
+			roomArray[curr_room_num - 1].in_use = 1;
+			roomArray[curr_room_num - 1].lights = 1;
+			if (curr_room_num == 1) {
+				OpenServo();
+				TurnOnLights();
+
 			}
-			else if (last_room_num == LIGHTS_OFF) {
-				roomArray[curr_room_num - 1].lights = 0;
-				if (curr_room_num == 1) {
-					TurnOffLights();
-				}
-			}
-			else if (last_room_num == LIGHTS_ON) {
-				roomArray[curr_room_num - 1].lights = 1;
-				if (curr_room_num == 1) {
-					TurnOnLights();
-				}
-			}
-			else if (last_room_num == LOCK_DOOR) {
-				roomArray[curr_room_num - 1].door = 0;
-				if (curr_room_num == 1) {
-					CloseServo();
-				}
-				if (roomArray[curr_room_num - 1].in_use==0 && roomArray[curr_room_num - 1].requested ) {
-					roomArray[curr_room_num - 1].requested = 0;
-				}
-				else if (roomArray[curr_room_num - 1].in_use==1 && roomArray[curr_room_num - 1].requested ) {
-					roomArray[curr_room_num - 1].requested = 0;
-					roomArray[curr_room_num-1].in_use = 0;
-					roomArray[curr_room_num-1].lights = 0;
-					if (curr_room_num == 1) {
-						CloseServo();
-						TurnOffLights();
-					}
-				}
-			} else if (last_room_num == UNLOCK_DOOR) {
-				roomArray[curr_room_num - 1].door = 1;
-				if (curr_room_num == 1) {
-					OpenServo();
-				}
-				if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
-					roomArray[curr_room_num - 1].requested = 0;
-					roomArray[curr_room_num - 1].in_use = 1;
-					roomArray[curr_room_num - 1].lights = 1;
-					if (curr_room_num == 1) {
+		}
+	}
+	else if (last_room_num == AUTO_APPROVE){
+		if(auto_approve){
+			auto_approve=0;
+		}
+		else{
+			auto_approve = 1;
+			for (k = 0; k < 10; k++) {
+				if(roomArray[k].requested){
+					roomArray[k].requested=0;
+					roomArray[k].in_use = 1;
+					roomArray[k].lights = 1;
+					roomArray[k].door = 1;
+					if (k == 0) {
 						OpenServo();
 						TurnOnLights();
+					}
+				}
+			}
+		}
+	}
+	send_data_to_firebase();
 
-					}
-				}
-			}
-			else if (last_room_num == AUTO_APPROVE){
-				if(auto_approve){
-					auto_approve=0;
-				}
-				else{
-					auto_approve = 1;
-					for (k = 0; k < 10; k++) {
-						if(roomArray[k].requested){
-							roomArray[k].requested=0;
-							roomArray[k].in_use = 1;
-							roomArray[k].door = 1;
-							if (k == 0) {
-								OpenServo();
-							}
-						}
-					}
-				}
-			}
+}
+
+void send_data_to_firebase(void){
+	char message[150];
+	sprintf(message,"patch_rooms_firebase(\"/DefaultRoomId.json\", 0, 0, 0, 1, 35)\0");
+
+	//sprintf(message,"patch_rooms_firebase(\"/\%d.json\",\"%d\",\"%d\",\"%d\",\"%d\",\"%d\")", curr_room_num, roomArray[curr_room_num-1].in_use, roomArray[curr_room_num-1].lights, roomArray[curr_room_num-1].door, roomArray[curr_room_num-1].occupied,roomArray[curr_room_num-1].temp);
+	Wifi_Patch_Rooms(message);
 }
 
 /*
@@ -425,6 +437,7 @@ void RunDisplay(void) {
 	while (1) {
 		executeCommand(last_room_num);
 		printf("Starting Info Display\n");
+		//Wifi_update_database(curr_room_num);
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		displayRequests();
 		PrintNumbers(curr_room_num);
