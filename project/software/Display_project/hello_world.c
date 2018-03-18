@@ -249,6 +249,10 @@ int InfoChoice( int room_num) {
 			roomArray[curr_room_num-1].requested = 1;
 			//sprintf(message, "send_sms(\"The room requested: %d\")", curr_room_num);	// Customizes the message to specify which room was requested
 			//Wifi_Send_Sms(message);								// Sends the message through Wi-Fi chip
+			// For the De1 and database connection the data format follows: patch_rooms_firebase("/-L7R1brj3jYyLGkYq64_.json","false", "true", "false", "true", "9")
+			// patch_rooms_firebase(data_path, use_var, light_var, lock_var, occup_var, temp_var)  
+			// get_rooms_firebase("/-L7R1brj3jYyLGkYq64_.json","true", "true", "true", "true", "0")
+			// get_rooms_firebase(data_path, use_var, light_var, lock_var, occup_var, temp_var)    
 			if(auto_approve && roomArray[curr_room_num-1].in_use == 0){
 				return UNLOCK_DOOR;
 			}
@@ -412,7 +416,7 @@ void RunDisplay(void) {
 	AttemptBluetoothConnection();
 	InitRoomArray();
 	Init_Touch();
-	//Wifi_Init();
+	Wifi_Init();
 	Init_ISR();
 
 	BaseDisplay();

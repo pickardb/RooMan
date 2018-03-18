@@ -90,4 +90,16 @@ void Wifi_Send_Sms(char message[]) {
 	Wifi_Print_Response();
 }
 
+void Wifi_Patch_Rooms(char message[]) {
+	printf("Writing data to db \n");
+	
+	//Wi-Fi configuration file
+	Wifi_Send_String("dofile(\"project2.lua\")");
+	Wifi_Send_String("check_wifi()");
+	Wifi_Send_String(message);
+	
+	printf("data written \n");
+	Wifi_Print_Response();
+}
+
 
