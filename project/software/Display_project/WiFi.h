@@ -56,6 +56,18 @@ void Wifi_Send_String(char command[]) {
 	Wifi_Send_Char('\n');
 }
 
+void Wifi_Send_String_without(char command[]) {
+
+	int i;
+	// Send the whole string command by sending each character
+	for (i = 0; i != '\0'; i++) {
+		Wifi_Send_Char(command[i]);
+	}
+
+	// Send the termination flags, without them the Wi-Fi chip won't know when
+	// the command ends and when the next command starts.
+}
+
  // Receives a string form the Wi-Fi chip by polling until we reach a newline 
 void Wifi_Print_Response(){
 	char response;
@@ -89,16 +101,20 @@ void Wifi_Send_Sms(char message[]) {
 	printf("sms sent \n");
 	Wifi_Print_Response();
 }
-
+void Wifi_Dofile(){
+	Wifi_Send_String("dofile(\"project2.lua\")");
+	Wifi_Send_String("check_wifi()");
+}
 
 void Wifi_Patch_Rooms(char message[]) {
 	printf("Writing data to db \n");
 	
 	//Wi-Fi configuration file
-	Wifi_Send_String("dofile(\"project2.lua\")");
+	Wifi_Dofile();
 	Wifi_Send_String("check_wifi()");
-	Wifi_Send_String(message);
-	
+	Wifi_Send_String_without(message);
+	Wifi_Send_String_without(message);
+	printf(message);
 	printf("data written \n");
 	Wifi_Print_Response();
 }
