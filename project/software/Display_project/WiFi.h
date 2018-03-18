@@ -90,20 +90,17 @@ void Wifi_Send_Sms(char message[]) {
 	Wifi_Print_Response();
 }
 
-void Wifi_update_database() {
-	//printf("Sending room data \n");
-	char message[30];
 
+void Wifi_Patch_Rooms(char message[]) {
+	printf("Writing data to db \n");
+	
 	//Wi-Fi configuration file
-	//Wifi_Send_String("dofile(\"project2.lua\")");
-	//Wifi_Send_String("check_wifi()");
-	//Temp,Lights,Door,Requested,in_use,occupied
-	sprintf(message,"write_data_firebase(%d%d%d%d%d%d)", curr_room_num,roomArray[curr_room_num-1].in_use,roomArray[curr_room_num-1].lights,roomArray[curr_room_num-1].door,roomArray[curr_room_num-1].occupied,roomArray[curr_room_num-1].temp);
-	printf("%s\n",message);
-	//Wifi_Send_String(message);
-
-	//printf("room status sent \n");
-	//Wifi_Print_Response();
+	Wifi_Send_String("dofile(\"project2.lua\")");
+	Wifi_Send_String("check_wifi()");
+	Wifi_Send_String(message);
+	
+	printf("data written \n");
+	Wifi_Print_Response();
 }
 
 

@@ -42,5 +42,4 @@ dht DHT;
 #define rangerFinderThreshold 15
 #define openPos 180
 #define closedPos 100
-
 Servo door;
