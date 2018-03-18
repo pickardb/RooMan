@@ -373,9 +373,11 @@ void executeCommand (int last_room_num){
 						if(roomArray[k].requested){
 							roomArray[k].requested=0;
 							roomArray[k].in_use = 1;
+							roomArray[k].lights = 1;
 							roomArray[k].door = 1;
 							if (k == 0) {
 								OpenServo();
+								TurnOnLights();
 							}
 						}
 					}
@@ -421,6 +423,7 @@ void RunDisplay(void) {
 	while (1) {
 		executeCommand(last_room_num);
 		printf("Starting Info Display\n");
+		Wifi_update_database(curr_room_num);
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		displayRequests();
 		PrintNumbers(curr_room_num);
