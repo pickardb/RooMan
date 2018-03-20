@@ -19,7 +19,7 @@ void Wifi_Init(void) {
 	Wifi_Control = 0x03;	// Reset the wifi control 
 	Wifi_Control = 0x15;	// Setup the wifi control 
 	Wifi_Baud = 0x01;	// Program baud rate generator to use 115k baud.
-
+	Wifi_Send_String("dofile(\"project2.lua\")");
 
 }
 
@@ -94,15 +94,16 @@ void Wifi_Send_Sms(char message[]) {
 	printf("Sending sms \n");
 	
 	//Wi-Fi configuration file
-	Wifi_Send_String("dofile(\"project2.lua\")");
+
 	Wifi_Send_String("check_wifi()");
 	Wifi_Send_String(message);
-	
+	//Wifi_Send_String("dofile(\"project2.lua\")");
+
 	printf("sms sent \n");
 	Wifi_Print_Response();
 }
 void Wifi_Dofile(){
-	Wifi_Send_String("dofile(\"project2.lua\")");
+	//Wifi_Send_String("dofile(\"project2.lua\")");
 	Wifi_Send_String("check_wifi()");
 }
 
@@ -111,9 +112,10 @@ void Wifi_Patch_Rooms(char message[]) {
 	
 	//Wi-Fi configuration file
 	Wifi_Dofile();
-	Wifi_Send_String("check_wifi()");
-	Wifi_Send_String_without(message);
-	Wifi_Send_String_without(message);
+	Wifi_Print_Response();
+	//Wifi_Send_String("check_wifi()");
+	Wifi_Send_String(message);
+	//Wifi_Send_String(message);
 	printf(message);
 	printf("data written \n");
 	Wifi_Print_Response();

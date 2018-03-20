@@ -393,7 +393,7 @@ void executeCommand (int last_room_num){
 
 void send_data_to_firebase(void){
 	char message[150];
-	sprintf(message,"patch_rooms_firebase(\"/DefaultRoomId.json\", 0, 0, 0, 1, 35)\0");
+	sprintf(message,"patch_rooms_firebase(\"/blabla.json\", 0, 0, 0, 1, 0)");
 
 	//sprintf(message,"patch_rooms_firebase(\"/\%d.json\",\"%d\",\"%d\",\"%d\",\"%d\",\"%d\")", curr_room_num, roomArray[curr_room_num-1].in_use, roomArray[curr_room_num-1].lights, roomArray[curr_room_num-1].door, roomArray[curr_room_num-1].occupied,roomArray[curr_room_num-1].temp);
 	Wifi_Patch_Rooms(message);
