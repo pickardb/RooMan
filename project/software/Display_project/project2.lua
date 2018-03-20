@@ -24,7 +24,7 @@ HOST = "iot-https-relay.appspot.com"
 -- use the first one if you want to send a text to a cell phone
 -- use the second (commented out) one if you want to make a call to a cell phone � that�s the only change
 URI = "/twilio/Messages.json"
-PATH = "/Rooms.json"
+PATH = "/Rooms"
 HOST_DB = "35.202.73.165"
 URI_ROOM = "/Rooms"
 URI_USER = "/Users"
@@ -129,7 +129,34 @@ end
 
 function send_rooms_db(data_table)
 
-	json = "{\"inUse\" : "..data_table["use"]..",".."\"lightsOn\" : "..data_table["light"]..",".."\"locked\" : "..data_table["lock"]..",".."\"occupied\" : "..data_table["occup"]..",".."\"temperature\" : "..data_table["temp"].."}"	
+
+	if(data_table["use"] == "0" or data_table["use"] == 0) then
+		data_table["use"] = "false"
+		end
+	if(data_table["use"] == "1" or data_table["use"] == 1) then
+		data_table["use"] = "true"
+		end
+	if(data_table["light"] == "0" or data_table["light"] == 0) then
+		data_table["light"] = "false"
+		end
+	if(data_table["light"] == "1" or data_table["light"] == 1) then
+		data_table["light"] = "true"
+		end
+	if(data_table["lock"] == "0" or data_table["lock"] == 0) then
+		data_table["lock"] = "false"
+		end
+	if(data_table["lock"] == "1" or data_table["lock"] == 1) then
+		data_table["lock"] = "true"
+		end
+	if(data_table["occup"] == "0" or data_table["occup"] == 0) then
+		data_table["occup"] = "false"
+		end
+	if(data_table["occup"] == "1" or data_table["occup"] == 1) then
+		data_table["occup"] = "true"
+		end
+	
+	
+		json = "{\"inUse\" : "..data_table["use"]..",".."\"lightsOn\" : "..data_table["light"]..",".."\"locked\" : "..data_table["lock"]..",".."\"occupied\" : "..data_table["occup"]..",".."\"temperature\" : "..data_table["temp"].."}"	
 		--	"\"roomNum\" : "..data_table["roomNum"]..", "..
 		--	"\"occupied\" : "..data_table["occupancy"]..", "..
 		--	"\"temperature\" : "..data_table["temp"].."}"
@@ -176,6 +203,11 @@ function get_rooms_db(data_table)
 	post_request = get_database_request(HOST_DB, URI_ROOM, data, PATH)
 	sck:send(post_request)
     end)
+	temp_rcv = data_table["temp"]
+	print(data_table["use"])
+	print(temp_rcv)
+	
+	display()
 end
 
 
@@ -215,60 +247,12 @@ function get_rooms_firebase(data_path, use_var, light_var, lock_var, occup_var, 
 		}
 	PATH = data_path
 	get_rooms_db(json_data)
+	
 	end
 end
 
 
-function send_users_db(data_table)
 
-	json = "{\"firstName\" : "..data_table["fname"]..",".."\"lastName\" : "..data_table["lname"]..",".."\"password\" : "..data_table["pass"]..",".."\"userName\" : "..data_table["user"].."}"	
-		--	"\"roomNum\" : "..data_table["roomNum"]..", "..
-		--	"\"occupied\" : "..data_table["occupancy"]..", "..
-		--	"\"temperature\" : "..data_table["temp"].."}"
-		
-	
-	data = {
-	--path = "/DefaultRoomId",
-    data = json
-	}
-	
-	--path = "/DefaultRoomId.json"
-	
-	socket = net.createConnection(net.TCP,0)
-	socket:on("receive", display)
-    socket:connect(80,HOST_DB)
-	
-	socket:on("connection", function(sck)
-	post_request = build_database_request(HOST_DB, URI_USER, data, PATH)
-	sck:send(post_request)
-    end)
-end
-
-
-function get_users_firebase()
-
-	json = "{\"firstName\" : "..data_table["fname"]..",".."\"lastName\" : "..data_table["lname"]..",".."\"password\" : "..data_table["pass"]..",".."\"userName\" : "..data_table["user"].."}"	
-		--	"\"roomNum\" : "..data_table["roomNum"]..", "..
-		--	"\"occupied\" : "..data_table["occupancy"]..", "..
-		--	"\"temperature\" : "..data_table["temp"].."}"
-		
-	
-	data = {
-	--path = "/DefaultRoomId",
-    data = json
-	}
-	
-	--path = "/DefaultRoomId.json"
-	
-	socket = net.createConnection(net.TCP,0)
-	socket:on("receive", display)
-    socket:connect(80,HOST_DB)
-	
-	socket:on("connection", function(sck)
-	post_request = get_database_request(HOST_DB, URI_USER, data, PATH)
-	sck:send(post_request)
-    end)
-end
 
 
 function check_wifi()
