@@ -311,6 +311,20 @@ void InitRoomArray(void){
 	roomArray[4].requested = 1;
 }
 
+void send_data_to_firebase(void){
+	char message[150];
+
+	sprintf(message,"patch_rooms_firebase(\"/\%d.json\",%d,%d,%d,%d,%d,%d)", curr_room_num, curr_room_num, roomArray[curr_room_num-1].in_use, roomArray[curr_room_num-1].lights, !roomArray[curr_room_num-1].door, roomArray[curr_room_num-1].occupied,roomArray[curr_room_num-1].temp);
+	Wifi_Patch_Rooms(message);
+}
+
+void retrieve_data_from_firebase(void){
+	char message[150];
+
+	sprintf(message,"get_rooms_firebase(\"/\%d.json\")", curr_room_num);
+	Wifi_Get_Rooms(message);
+}
+
 /*
  * Takes in a command, and executes the command, either selecting a room or changing some hardware
  */
@@ -387,17 +401,10 @@ void executeCommand (int last_room_num){
 			}
 		}
 	}
-	send_data_to_firebase();
+	//send_data_to_firebase();
 
 }
 
-void send_data_to_firebase(void){
-	char message[150];
-	sprintf(message,"patch_rooms_firebase(\"/blabla.json\", 0, 0, 0, 1, 0)");
-
-	//sprintf(message,"patch_rooms_firebase(\"/\%d.json\",\"%d\",\"%d\",\"%d\",\"%d\",\"%d\")", curr_room_num, roomArray[curr_room_num-1].in_use, roomArray[curr_room_num-1].lights, roomArray[curr_room_num-1].door, roomArray[curr_room_num-1].occupied,roomArray[curr_room_num-1].temp);
-	Wifi_Patch_Rooms(message);
-}
 
 /*
  * For each room, checks if there is a request. If so, prints the request indicator on the screen
@@ -429,7 +436,7 @@ void RunDisplay(void) {
 	InitRoomArray();
 	Init_Touch();
 	Wifi_Init();
-	Init_ISR();
+	//Init_ISR();
 
 	BaseDisplay();
 	last_room_num = BaseChoice();
@@ -441,6 +448,7 @@ void RunDisplay(void) {
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		displayRequests();
 		PrintNumbers(curr_room_num);
+		retrieve_data_from_firebase();
 		last_room_num = InfoChoice(curr_room_num);
 	}
 }
