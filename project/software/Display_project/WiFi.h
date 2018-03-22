@@ -170,9 +170,25 @@ void Wifi_Get_Rooms(char message[]) {
 	Wifi_Send_String_without("get_data()");
 	Wifi_Print_Response_Hex();
 
-	parse_get_data(response);
+	int err = parse_get_data(response);
+	if(err==0)printf("Error Parsing HTML data \n");
 
 
+}
+
+void update_room (int room_num, int door, int lights){
+	if(roomArray[room_num-1].door==1&&door==0){
+		if(room_num==1)CloseServo();
+	}
+	else if(roomArray[room_num-1].door==0&&door==1){
+		if(room_num==1)OpenServo();
+	}
+	if(roomArray[room_num-1].lights==1&&lights==0){
+		if(room_num==1)TurnOffLights();
+	}
+	else if(roomArray[room_num-1].lights==0&&lights==1){
+		if(room_num==1)TurnOnLights();
+	}
 }
 
 int parse_get_data (char response[1000]){
@@ -185,11 +201,12 @@ int parse_get_data (char response[1000]){
 	int locked=-1;
 	int occupied=-1;
 	int temp=-1;
-	printf("Parser printing: \n");
 
 	while(response[i]!='{'){
 		i++;
-		printf("%c",response[i]);
+		if(i>=1000){
+			return 0;
+		}
 	}
 	i+=8;
 	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
@@ -199,9 +216,10 @@ int parse_get_data (char response[1000]){
 		roomnum=10*tens+ones;
 		i++;
 	}
-	else{
+	else if(response[i+1]=='"'){
 		roomnum = tens;
 	}
+	else return 0;
 	i+=11;
 	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	if(response[i]=='t'){
@@ -212,6 +230,7 @@ int parse_get_data (char response[1000]){
 		inUse=0;
 		i+=17;
 	}
+	else return 0;
 	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	if(response[i]=='t'){
 		lights=1;
@@ -230,6 +249,7 @@ int parse_get_data (char response[1000]){
 		locked=0;
 		i+=17;
 	}
+	else return 0;
 	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	if(response[i]=='t'){
 		occupied=1;
@@ -239,19 +259,27 @@ int parse_get_data (char response[1000]){
 		occupied=0;
 		i+=20;
 	}
+	else return 0;
 	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	tens = response[i]-48;
 	if(response[i+1]!='"'){
 		ones = response[i+1]-48;
 		temp = 10*tens+ones;
 	}
-	else{
+	else if(response[i+1]=='"'){
 		temp=tens;
 	}
+	else return 0;
 	printf("%d %d %d %d %d %d \n",roomnum,inUse,lights,locked,occupied,temp);
+	update_room(roomnum,!locked,lights);
+	roomArray[roomnum-1].in_use = inUse;
+	roomArray[roomnum-1].lights = lights;
+	if(locked)roomArray[roomnum-1].door = 0;
+	else roomArray[roomnum-1].door=1;
+	roomArray[roomnum-1].occupied = occupied;
+	roomArray[roomnum-1].temp = temp;
 
-
-	return 0;
+	return 1;
 }
 
 

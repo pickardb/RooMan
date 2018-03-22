@@ -421,6 +421,12 @@ void displayRequests (void){
 	}
 }
 
+void update_room_num(int last_room_num){
+	if (last_room_num >= 1 && last_room_num <= 10) {
+		curr_room_num = last_room_num;
+	}
+}
+
 /*
  * Main loop to run the program.
  * Starts off initialzing all the serial outputs and bluetooth
@@ -442,13 +448,15 @@ void RunDisplay(void) {
 	last_room_num = BaseChoice();
 
 	while (1) {
+		update_room_num(last_room_num);
+		retrieve_data_from_firebase();
 		executeCommand(last_room_num);
 		printf("Starting Info Display\n");
 		//Wifi_update_database(curr_room_num);
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		displayRequests();
 		PrintNumbers(curr_room_num);
-		retrieve_data_from_firebase();
+		send_data_to_firebase();
 		last_room_num = InfoChoice(curr_room_num);
 	}
 }
