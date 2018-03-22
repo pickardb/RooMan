@@ -277,7 +277,7 @@ int parse_get_data (char response[1000]){
 	if(locked)roomArray[roomnum-1].door = 0;
 	else roomArray[roomnum-1].door=1;
 	roomArray[roomnum-1].occupied = occupied;
-	roomArray[roomnum-1].temp = temp;
+	//roomArray[roomnum-1].temp = temp;
 
 	return 1;
 }

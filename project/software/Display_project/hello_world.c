@@ -442,7 +442,7 @@ void RunDisplay(void) {
 	InitRoomArray();
 	Init_Touch();
 	Wifi_Init();
-	//Init_ISR();
+	Init_ISR();
 
 	BaseDisplay();
 	last_room_num = BaseChoice();
