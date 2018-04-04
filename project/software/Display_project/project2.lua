@@ -25,9 +25,11 @@ HOST = "iot-https-relay.appspot.com"
 -- use the second (commented out) one if you want to make a call to a cell phone � that�s the only change
 URI = "/twilio/Messages.json"
 PATH = "/Rooms"
-HOST_DB = "35.202.73.165"
+HOST_DB = "35.185.232.137"
 URI_ROOM = "/Rooms"
 URI_USER = "/Users"
+
+get_response = ""
 
 --URI = "/twilio/Calls.json"
 
@@ -98,22 +100,33 @@ end
 function get_database_request(host, uri, data_table, path)
 
      data = ""
-
-     for param,value in pairs(data_table) do
-          data = data .. param.."="..value.."&"
-     end
-
-	 data = string.sub(data, 0, -2)
-     data = data_table['data']
+     
+	 --data = string.sub(data, 0, -2)
+     --data = data_table['data']
 	   
      request = "GET "..uri..path.." HTTP/1.1\r\n"..
      "Host: "..host.."\r\n"..
      "Connection: close\r\n"..
      "Content-Type: text/html\r\n"..
-     "Content-Length: "..string.len(data).."\r\n"..
+     "Content-Length: ".."0".."\r\n"..
      "\r\n"..
      data
      print(request)
+	 
+     return request
+end
+
+function stream_data_request(host, uri, path)
+
+	
+     request = "GET "..uri..path.." HTTP/1.1\r\n"..
+     "Host: "..host.."\r\n"..
+     "Accept: text/event-stream\r\n".. 
+	 "Connection: Keep-Alive\r\n"..
+     "\r\n"..
+     
+     print(request)
+	 
      return request
 end
 
@@ -154,9 +167,9 @@ function send_rooms_db(data_table)
 	if(data_table["occup"] == "1" or data_table["occup"] == 1) then
 		data_table["occup"] = "true"
 		end
+	--data_table["id"] = tostring(data_table["id"])
 	
-	
-		json = "{\"inUse\" : "..data_table["use"]..",".."\"lightsOn\" : "..data_table["light"]..",".."\"locked\" : "..data_table["lock"]..",".."\"occupied\" : "..data_table["occup"]..",".."\"temperature\" : "..data_table["temp"].."}"	
+		json = "{\"_id\" : "..'"'..data_table["id"]..'"'..",".."\"inUse\" : "..data_table["use"]..",".."\"lightsOn\" : "..data_table["light"]..",".."\"locked\" : "..data_table["lock"]..",".."\"occupied\" : "..data_table["occup"]..",".."\"temperature\" : "..data_table["temp"].."}"	
 		--	"\"roomNum\" : "..data_table["roomNum"]..", "..
 		--	"\"occupied\" : "..data_table["occupancy"]..", "..
 		--	"\"temperature\" : "..data_table["temp"].."}"
@@ -182,43 +195,66 @@ end
 
 function get_rooms_db(data_table)
 
-	json = "{\"inUse\" : "..data_table["use"]..",".."\"lightsOn\" : "..data_table["light"]..",".."\"locked\" : "..data_table["lock"]..",".."\"occupied\" : "..data_table["occup"]..",".."\"temperature\" : "..data_table["temp"].."}"	
+	--json = {} 
+	--"{\"_id\" : "..data_table["id"]..",".."\"inUse\" : "..data_table["use"]..",".."\"lightsOn\" : "..data_table["light"]..",".."\"locked\" : "..data_table["lock"]..",".."\"occupied\" : "..data_table["occup"]..",".."\"temperature\" : "..data_table["temp"].."}"	
 		--	"\"roomNum\" : "..data_table["roomNum"]..", "..
 		--	"\"occupied\" : "..data_table["occupancy"]..", "..
 		--	"\"temperature\" : "..data_table["temp"].."}"
 		
 	
-	data = {
-	--path = "/DefaultRoomId",
-    data = json
-	}
+	data = ""
 	
 	--path = "/DefaultRoomId.json"
 	
 	socket = net.createConnection(net.TCP,0)
-	socket:on("receive", display)
+	socket:on("receive", function(sck, response)
+		get_response = response
+		
+		print(tostring(get_response))
+	end)
     socket:connect(80,HOST_DB)
 	
 	socket:on("connection", function(sck)
 	post_request = get_database_request(HOST_DB, URI_ROOM, data, PATH)
 	sck:send(post_request)
     end)
-	temp_rcv = data_table["temp"]
-	print(data_table["use"])
-	print(temp_rcv)
 	
-	display()
+	return get_response
+	--print(display)
+		
+end
+
+function get_stream_data(data_table)
+
+data = ""
+			
+	socket = net.createConnection(net.TCP,0)
+	socket:on("receive", function(sck, response)
+		get_response = response
+		print(tostring(get_response))
+	end)
+    socket:connect(80,HOST_DB)
+	
+	socket:on("connection", function(sck)
+	post_request = stream_data_request(HOST_DB, URI_ROOM, PATH)
+	print("stream data request is sent")
+	sck:send(post_request)
+    end)
+	
+	return get_response
 end
 
 
-function patch_rooms_firebase(data_path, use_var, light_var, lock_var, occup_var, temp_var)    
+function patch_rooms_firebase(data_path, id_var, use_var, light_var, lock_var, occup_var, temp_var)    
 	ip = wifi.sta.getip()
 
 	if(ip==nil)then
 		print("No connection established")
 	else
 		tmr.stop(0)
+		id = ""
 		json_data = {
+			id = tostring(id_var),
 			use = use_var,
 			light = light_var,
 			lock = lock_var,
@@ -231,39 +267,53 @@ function patch_rooms_firebase(data_path, use_var, light_var, lock_var, occup_var
 end
 
 
-function get_rooms_firebase(data_path, use_var, light_var, lock_var, occup_var, temp_var)    
+function stream_data(data_path)    
 	ip = wifi.sta.getip()
 
 	if(ip==nil)then
 		print("No connection established")
 	else
 		tmr.stop(0)
-		json_data = {
-			use = use_var,
-			light = light_var,
-			lock = lock_var,
-			occup = occup_var,
-			temp = temp_var
-		}
+		
+	PATH = data_path
+	get_stream_data()
+	print("stream data request is sent")
+	end
+	
+	
+end
+
+function get_rooms_firebase(data_path)    
+	ip = wifi.sta.getip()
+
+	if(ip==nil)then
+		print("No connection established")
+	else
+		tmr.stop(0)
+		json_data = {}
 	PATH = data_path
 	get_rooms_db(json_data)
-	
+
+	--print(json_data.use..json_data.light..json_data.lock..json_data.occup..json_data.temp)
 	end
 end
 
-
-
-
+function get_data()
+	--print(get_response)
+	new_data = string.sub(get_response, 138, 228)
+	print(new_data)
+	
+end
 
 function check_wifi()
   ip = wifi.sta.getip()
 
  if(ip==nil) then
    print("Connecting...")
+   check_wifi()
  else
   tmr.stop(0)
   print("Connected to AP!")
   print(ip)
-  
  end
 end
