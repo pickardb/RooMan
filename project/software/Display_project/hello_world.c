@@ -370,7 +370,7 @@ void executeCommand (int last_room_num){
 	} else if (last_room_num == UNLOCK_DOOR) {
 		roomArray[curr_room_num - 1].door = 1;
 		if (curr_room_num == 1) {
-			OpenServo();
+			OpenServoBuzzer();
 		}
 		if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
 			roomArray[curr_room_num - 1].requested = 0;

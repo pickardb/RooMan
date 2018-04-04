@@ -180,7 +180,7 @@ void update_room (int room_num, int door, int lights){
 
 	}
 	else if(roomArray[room_num-1].door==0&&door==1){
-		if(room_num==1)OpenServo();
+		if(room_num==1)OpenServoBuzzer();
 	}
 	else if(roomArray[room_num-1].door){
 		if(room_num==1)OpenServo();

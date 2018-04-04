@@ -124,6 +124,11 @@ void executeCommand(char incomingCommand) {
     case doorOpenCommand:
       Serial.println("Door Open");
       turnServo(openPos);
+      break;
+
+    case doorOpenBuzzerCommand:
+      Serial.println("Door Open");
+      turnServo(openPos);
       doorUnlockTone();
       break;
     case doorCloseCommand:
