@@ -28,6 +28,7 @@ dht DHT;
 #define doorOpenCommand 'e'
 #define doorCloseCommand 'f'
 #define tempRequestCommand 'h'
+#define doorOpenBuzzerCommand 'g'
 #define requestLightCommand 'z'
 
 //output message

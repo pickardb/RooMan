@@ -10,6 +10,7 @@
 #define doorOpenCommand 'e'
 #define doorCloseCommand 'f'
 #define tempRequestCommand 'h'
+#define doorOpenBuzzerCommand 'g'
 #define occupiedMessage '5'
 #define freeMessage '2'
 #define requestRoomMessage '3'
@@ -81,6 +82,9 @@ void OpenServo(void) {
 	putcharRS232(doorOpenCommand);
 }
 
+void OpenServoBuzzer(void){
+	putcharRS232(doorOpenBuzzerCommand);
+}
 void CloseServo(void) {
 	putcharRS232(doorCloseCommand);
 }

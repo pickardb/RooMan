@@ -264,9 +264,11 @@ int InfoChoice( int room_num) {
 		else if (command == 'L'){
 			if(roomArray[0].lights){
 				roomArray[0].lights = 0;
+				return LIGHTS_OFF;
 			}
 			else{
 				roomArray[0].lights = 1;
+				return LIGHTS_ON;
 			}
 			return 99;
 		}
@@ -305,10 +307,24 @@ void InitRoomArray(void){
 		roomArray[i].requested = 0;
 		roomArray[i].in_use = 0;
 		roomArray[i].occupied = 0;
-		roomArray[i].temp = 0;
+		roomArray[i].temp = 20;
 	}
 	roomArray[3].requested = 1;
 	roomArray[4].requested = 1;
+}
+
+void send_data_to_firebase(void){
+	char message[150];
+
+	sprintf(message,"patch_rooms_firebase(\"/\%d.json\",%d,%d,%d,%d,%d,%d)", curr_room_num, curr_room_num, roomArray[curr_room_num-1].in_use, roomArray[curr_room_num-1].lights, !roomArray[curr_room_num-1].door, roomArray[curr_room_num-1].occupied,roomArray[curr_room_num-1].temp);
+	Wifi_Patch_Rooms(message);
+}
+
+void retrieve_data_from_firebase(void){
+	char message[150];
+
+	sprintf(message,"get_rooms_firebase(\"/\%d.json\")", curr_room_num);
+	Wifi_Get_Rooms(message);
 }
 
 /*
@@ -354,7 +370,7 @@ void executeCommand (int last_room_num){
 	} else if (last_room_num == UNLOCK_DOOR) {
 		roomArray[curr_room_num - 1].door = 1;
 		if (curr_room_num == 1) {
-			OpenServo();
+			OpenServoBuzzer();
 		}
 		if (roomArray[curr_room_num - 1].requested && roomArray[curr_room_num - 1].in_use==0) {
 			roomArray[curr_room_num - 1].requested = 0;
@@ -387,17 +403,10 @@ void executeCommand (int last_room_num){
 			}
 		}
 	}
-	send_data_to_firebase();
+	//send_data_to_firebase();
 
 }
 
-void send_data_to_firebase(void){
-	char message[150];
-	sprintf(message,"patch_rooms_firebase(\"/DefaultRoomId.json\", 0, 0, 0, 1, 35)\0");
-
-	//sprintf(message,"patch_rooms_firebase(\"/\%d.json\",\"%d\",\"%d\",\"%d\",\"%d\",\"%d\")", curr_room_num, roomArray[curr_room_num-1].in_use, roomArray[curr_room_num-1].lights, roomArray[curr_room_num-1].door, roomArray[curr_room_num-1].occupied,roomArray[curr_room_num-1].temp);
-	Wifi_Patch_Rooms(message);
-}
 
 /*
  * For each room, checks if there is a request. If so, prints the request indicator on the screen
@@ -411,6 +420,12 @@ void displayRequests (void){
 		else if (roomArray[k].requested == 1 && roomArray[k].in_use==0) {
 			RequestOpenDisplay(k +1);
 		}
+	}
+}
+
+void update_room_num(int last_room_num){
+	if (last_room_num >= 1 && last_room_num <= 10) {
+		curr_room_num = last_room_num;
 	}
 }
 
@@ -435,12 +450,16 @@ void RunDisplay(void) {
 	last_room_num = BaseChoice();
 
 	while (1) {
+		update_room_num(last_room_num);
+		retrieve_data_from_firebase();
+		printf("Executing Command\n");
 		executeCommand(last_room_num);
 		printf("Starting Info Display\n");
 		//Wifi_update_database(curr_room_num);
 		InfoDisplay(curr_room_num, roomArray[curr_room_num - 1].lights,roomArray[curr_room_num - 1].door,roomArray[curr_room_num - 1].occupied,roomArray[curr_room_num - 1].in_use, roomArray[curr_room_num - 1].temp);
 		displayRequests();
 		PrintNumbers(curr_room_num);
+		send_data_to_firebase();
 		last_room_num = InfoChoice(curr_room_num);
 	}
 }
