@@ -147,12 +147,10 @@ void Wifi_Patch_Rooms(char message[]) {
 	//Wi-Fi configuration file
 	Wifi_Send_String("check_wifi()");
 	Wifi_Print_Response();
-	//Wifi_Send_String("check_wifi()");
 	Wifi_Send_String(message);
-	//Wifi_Send_String(message);
 	printf(message);
-	printf("data written \n");
-	Wifi_Print_Response();
+	//printf("data written \n");
+	//Wifi_Print_Response();
 
 }
 
@@ -179,14 +177,27 @@ void Wifi_Get_Rooms(char message[]) {
 void update_room (int room_num, int door, int lights){
 	if(roomArray[room_num-1].door==1&&door==0){
 		if(room_num==1)CloseServo();
+
 	}
 	else if(roomArray[room_num-1].door==0&&door==1){
 		if(room_num==1)OpenServo();
+	}
+	else if(roomArray[room_num-1].door){
+		if(room_num==1)OpenServo();
+	}
+	else if(!roomArray[room_num-1].door){
+		if(room_num==1)CloseServo();
 	}
 	if(roomArray[room_num-1].lights==1&&lights==0){
 		if(room_num==1)TurnOffLights();
 	}
 	else if(roomArray[room_num-1].lights==0&&lights==1){
+		if(room_num==1)TurnOnLights();
+	}
+	else if(!roomArray[room_num-1].lights){
+		if(room_num==1)TurnOffLights();
+	}
+	else if(roomArray[room_num-1].lights){
 		if(room_num==1)TurnOnLights();
 	}
 }
@@ -209,7 +220,7 @@ int parse_get_data (char response[1000]){
 		}
 	}
 	i+=8;
-	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
+	//printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	tens = response[i]-48;
 	if(response[i+1]!='"'){
 		ones=response[i+1]-48;
@@ -221,7 +232,7 @@ int parse_get_data (char response[1000]){
 	}
 	else return 0;
 	i+=11;
-	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
+	//printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	if(response[i]=='t'){
 		inUse=1;
 		i+=16;
@@ -231,7 +242,7 @@ int parse_get_data (char response[1000]){
 		i+=17;
 	}
 	else return 0;
-	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
+	//printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	if(response[i]=='t'){
 		lights=1;
 		i+=14;
@@ -240,17 +251,21 @@ int parse_get_data (char response[1000]){
 		lights=0;
 		i+=15;
 	}
-	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
+	//printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	if(response[i]=='t'){
 		locked=1;
-		i+=16;
+		//i+=16;
 	}
 	else if(response[i]=='f'){
 		locked=0;
-		i+=17;
+		//i+=17;
 	}
 	else return 0;
-	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
+	while(!(response[i]=='o'&&response[i+1]=='c'&&response[i+2]=='c'&&response[i+3]=='u'&&response[i+4]=='p')){
+		i++;
+	}
+	i+=10;
+	//printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	if(response[i]=='t'){
 		occupied=1;
 		i+=19;
@@ -260,7 +275,7 @@ int parse_get_data (char response[1000]){
 		i+=20;
 	}
 	else return 0;
-	printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
+	//printf("I am at position %d with characters %c%c%c\n",i,response[i-1],response[i],response[i+1]);
 	tens = response[i]-48;
 	if(response[i+1]!='"'){
 		ones = response[i+1]-48;
@@ -277,7 +292,6 @@ int parse_get_data (char response[1000]){
 	if(locked)roomArray[roomnum-1].door = 0;
 	else roomArray[roomnum-1].door=1;
 	roomArray[roomnum-1].occupied = occupied;
-	//roomArray[roomnum-1].temp = temp;
 
 	return 1;
 }

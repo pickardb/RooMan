@@ -264,9 +264,11 @@ int InfoChoice( int room_num) {
 		else if (command == 'L'){
 			if(roomArray[0].lights){
 				roomArray[0].lights = 0;
+				return LIGHTS_OFF;
 			}
 			else{
 				roomArray[0].lights = 1;
+				return LIGHTS_ON;
 			}
 			return 99;
 		}
@@ -305,7 +307,7 @@ void InitRoomArray(void){
 		roomArray[i].requested = 0;
 		roomArray[i].in_use = 0;
 		roomArray[i].occupied = 0;
-		roomArray[i].temp = 0;
+		roomArray[i].temp = 20;
 	}
 	roomArray[3].requested = 1;
 	roomArray[4].requested = 1;
@@ -450,6 +452,7 @@ void RunDisplay(void) {
 	while (1) {
 		update_room_num(last_room_num);
 		retrieve_data_from_firebase();
+		printf("Executing Command\n");
 		executeCommand(last_room_num);
 		printf("Starting Info Display\n");
 		//Wifi_update_database(curr_room_num);
