@@ -1,5 +1,6 @@
-# CPEN391-Group14
-This repo is for our CPEN 391, Group 14 Project
+# RooMan Room Management System
+
+The RooMan Room Management system is a project devloped for the CPEN 391 course at UBC. The system runs on a DE1-SoC with a NIOS II processor, as well as multiple peripherals including a small touchscreen and an Arduino with various sensors. 
 
 All the source code of the project can be found in the project folder 
 
